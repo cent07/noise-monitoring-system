@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NoiseSense | Noise Map</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div class="logo">⚡ NoiseSense</div>
+
+<nav class="menu">
+<a href="index.html">Dashboard</a>
+<a href="threshold.html">Threshold Rules</a>
+<a href="alerts.html">Alerts</a>
+<a href="map.html" class="active">Noise Map</a>
+<a href="reports.html">Reports</a>
+<a href="register_device.html">Register Device</a>
+</nav>
+
+<div class="logout">
+<a href="#" id="logoutBtn">Logout</a>
+</div>
+
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+
+<h1 class="page-title">Noise Map</h1>
+
+<div class="devices-panel" style="margin-top:20px;">
+<h3>Realtime Classroom Noise Monitoring</h3>
+
+<div id="noiseMap"></div>
+
+</div>
+
+</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/map.js"></script>
+
+</body>
+</html>

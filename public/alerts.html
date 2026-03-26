@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NoiseSense | Alerts</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div class="logo">⚡ NoiseSense</div>
+
+<nav class="menu">
+<a href="index.html">Dashboard</a>
+<a href="threshold.html">Threshold Rules</a>
+<a href="alerts.html" class="active">Alerts</a>
+<a href="map.html">Noise Map</a>
+<a href="reports.html">Reports</a>
+<a href="register_device.html">Register Device</a>
+</nav>
+
+<div class="logout">
+<a href="#" id="logoutBtn">Logout</a>
+</div>
+
+</aside>
+
+
+<!-- MAIN -->
+<div class="main-content">
+
+<h1 class="page-title">Alert Logs</h1>
+
+<!-- ALERT SUMMARY -->
+<div class="dashboard" style="margin-bottom:20px">
+
+<div class="card">
+<h3>Total Critical Alerts</h3>
+<p id="totalAlerts">0</p>
+</div>
+
+<div class="card">
+<h3>Latest Device</h3>
+<p id="latestDevice">-</p>
+</div>
+
+<div class="card">
+<h3>Highest dB</h3>
+<p id="highestDb">0</p>
+</div>
+
+</div>
+
+
+<div class="devices-panel">
+
+<!-- FILTER BAR -->
+<div class="alert-filter-bar">
+
+<select id="filterDevice" class="alert-select">
+<option value="">All Devices</option>
+</select>
+
+<input
+type="text"
+id="searchBox"
+class="alert-search"
+placeholder="Search device or location..."
+/>
+
+<input
+type="date"
+id="filterDate"
+class="alert-date"
+/>
+
+</div>
+
+<!-- ALERT LIST -->
+<div id="alertsContainer" class="alerts-list"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ALERT MODAL -->
+<div id="alertModal" class="modal-overlay">
+<div class="modal-card">
+<h3 id="mTitle"></h3>
+
+<p><b>Location:</b> <span id="mLocation"></span></p>
+<p><b>Status:</b> <span id="mStatus"></span></p>
+<p><b>Date & Time:</b><br><span id="mTime"></span></p>
+
+<div class="modal-actions">
+<button class="btn-save" id="closeModal">Close</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- LOGOUT MODAL -->
+<div id="logoutModal" class="modal-overlay">
+<div class="modal-card">
+<h3>Confirm Logout</h3>
+<p>Are you sure you want to logout?</p>
+
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelLogout">Cancel</button>
+<button class="btn-confirm" id="confirmLogout">Logout</button>
+</div>
+
+</div>
+</div>
+
+<script type="module" src="js/alerts.js"></script>
+
+</body>
+</html>

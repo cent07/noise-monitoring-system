@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NoiseSense | Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<div class="logo">⚡ NoiseSense</div>
+
+<nav class="menu">
+<a href="index.html" class="active">Dashboard</a>
+<a href="threshold.html">Threshold Rules</a>
+<a href="alerts.html">Alerts</a>
+<a href="map.html">Noise Map</a>
+<a href="reports.html">Reports</a>
+<a href="register_device.html">Register Device</a>
+</nav>
+
+<div class="logout">
+<a href="#" id="logoutBtn">Logout</a>
+</div>
+</aside>
+
+
+<!-- MAIN -->
+<div class="main-content">
+
+<h1 class="page-title">Dashboard</h1>
+
+<div class="dashboard">
+  <div class="card"><h3>Total Devices</h3><p id="totalDevices">0</p></div>
+  <div class="card"><h3>Active Alerts</h3><p id="activeAlerts">0</p></div>
+  <div class="card"><h3>Average Noise</h3><p id="avgNoise">0 dB</p></div>
+</div>
+
+<h2 class="section-title">Realtime Analytics</h2>
+
+<div class="chart-box">
+  <div id="react-root" style="width:100%;height:360px;"></div>
+</div>
+
+<!-- REGISTERED DEVICES (NOW BELOW GRAPH) -->
+<div class="devices-panel" style="margin-top:25px;">
+<h3>Registered Devices</h3>
+
+<table class="devices-table">
+<thead>
+<tr>
+<th>Device</th>
+<th>Location</th>
+<th style="width:140px">Action</th>
+</tr>
+</thead>
+<tbody id="devicesBody"></tbody>
+</table>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- MODALS SAME -->
+<div id="deleteModal" class="modal-overlay">
+<div class="modal-card">
+<h3>Delete Device</h3>
+<p>Delete <b id="deleteDeviceName"></b> ?</p>
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelDelete">Cancel</button>
+<button class="btn-confirm" id="confirmDelete">Delete</button>
+</div>
+</div>
+</div>
+
+<div id="editModal" class="modal-overlay"> 
+<div class="modal-card">
+<h3>Edit Location</h3>
+<p id="editDeviceLabel"></p>
+<input id="editLocationInput" placeholder="New location">
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelEdit">Cancel</button>
+<button class="btn-save" id="confirmEdit">Save</button>
+</div>
+</div>
+</div>
+
+<div id="logoutModal" class="modal-overlay">
+<div class="modal-card">
+<h3>Confirm Logout</h3>
+<p>Are you sure you want to logout?</p>
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelLogout">Cancel</button>
+<button class="btn-confirm" id="confirmLogout">Logout</button>
+</div>
+</div>
+</div>
+
+<!-- REACT -->
+<script type="module" src="reactGraph/assets/index-CLr9dWDa.js"></script>
+
+<!-- DASHBOARD -->
+<script type="module" src="js/dashboard.js"></script>
+
+</body>
+</html>

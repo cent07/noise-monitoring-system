@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NoiseSense | Threshold Rules</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="logo">⚡ NoiseSense</div>
+
+<nav class="menu">
+<a href="index.html">Dashboard</a>
+<a href="threshold.html" class="active">Threshold Rules</a>
+<a href="alerts.html">Alerts</a>
+<a href="map.html">Noise Map</a>
+<a href="reports.html">Reports</a>
+<a href="register_device.html">Register Device</a>
+</nav>
+
+<div class="logout">
+<a href="#" id="logoutBtn">Logout</a>
+</div>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main-content">
+
+<h1 class="page-title">Threshold Rules</h1>
+
+
+<!-- ADD THRESHOLD -->
+
+<div class="card">
+
+<h3>Add Threshold</h3>
+
+<form class="threshold-form" id="thresholdForm">
+
+<label>Device</label>
+<select id="deviceSelect" required>
+<option value="">-- Choose Device --</option>
+</select>
+
+<label>Normal ≤ dB</label>
+<input type="number" id="normalValue" required>
+
+<label>Moderate ≤ dB</label>
+<input type="number" id="moderateValue" required>
+
+<label>Critical > dB</label>
+<input type="number" id="criticalValue" required>
+
+<button type="submit">
+<i class="fas fa-save"></i> Save
+</button>
+
+</form>
+
+</div>
+
+
+<!-- TABLE -->
+
+<div class="devices-panel">
+
+<h3>Current Thresholds</h3>
+
+<table class="devices-table">
+
+<thead>
+<tr>
+<th>Device</th>
+<th>Normal</th>
+<th>Moderate</th>
+<th>Critical</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="thresholdTable"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- LOGOUT MODAL -->
+
+<div id="logoutModal" class="modal-overlay">
+<div class="modal-card">
+<h3>Confirm Logout</h3>
+<p>Are you sure you want to logout?</p>
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelLogout">Cancel</button>
+<button class="btn-confirm" id="confirmLogout">Logout</button>
+</div>
+</div>
+</div>
+
+<!-- DELETE MODAL -->
+
+<div id="deleteModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>Delete Threshold</h3>
+    <p>Delete threshold for <b id="deleteDeviceName"></b> ?</p>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelDelete">Cancel</button>
+      <button class="btn-confirm" id="confirmDelete">Delete</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+
+<div id="editModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>Edit Threshold</h3>
+
+    <p id="editDeviceLabel"></p>
+
+    <input type="number" id="editNormal" placeholder="Normal ≤ dB">
+    <input type="number" id="editModerate" placeholder="Moderate ≤ dB">
+    <input type="number" id="editCritical" placeholder="Critical > dB">
+
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelEdit">Cancel</button>
+      <button class="btn-save" id="confirmEdit">Save</button>
+    </div>
+  </div>
+</div>
+
+
+<script type="module" src="js/threshold.js"></script>
+
+</body>
+</html>

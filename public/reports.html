@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NoiseSense | Reports</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="app-layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+<div class="logo">⚡ NoiseSense</div>
+
+<nav class="menu">
+<a href="index.html">Dashboard</a>
+<a href="threshold.html">Threshold Rules</a>
+<a href="alerts.html">Alerts</a>
+<a href="map.html">Noise Map</a>
+<a href="reports.html" class="active">Reports</a>
+<a href="register_device.html">Register Device</a>
+</nav>
+
+<div class="logout">
+<a href="#" id="logoutBtn">Logout</a>
+</div>
+
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+
+<h1 class="page-title">Noise Reports</h1>
+
+<div class="devices-panel">
+
+<!-- ⭐ REACT REPORTS WILL MOUNT HERE -->
+<div id="reportsRoot"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- LOGOUT MODAL -->
+<div id="logoutModal" class="modal-overlay">
+<div class="modal-card">
+<h3>Confirm Logout</h3>
+<p>Are you sure you want to logout?</p>
+
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelLogout">Cancel</button>
+<button class="btn-confirm" id="confirmLogout">Logout</button>
+</div>
+
+</div>
+</div>
+
+<!-- ⭐ LOAD REACT REPORTS BUILD -->
+<script type="module" src="reactReports/assets/index-BGWZgs3K.js"></script>
+
+</body>
+</html>
