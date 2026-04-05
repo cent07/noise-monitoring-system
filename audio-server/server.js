@@ -16,12 +16,23 @@ const wss = new WebSocket.Server({
   path: "/"
 });
 
+// 🔥 STORE ALL CLIENTS
+const clients = new Set();
+
 wss.on("connection", (ws) => {
-  console.log("ESP32 Connected");
+  console.log("Client Connected");
+
+  clients.add(ws);
 
   ws.on("message", (data) => {
-    // simple test muna
     console.log("Audio chunk received:", data.length);
+
+    // 🔥 BROADCAST SA LAHAT NG CLIENT (browser)
+    clients.forEach(client => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(data);
+      }
+    });
   });
 
   // KEEP ALIVE
@@ -32,7 +43,8 @@ wss.on("connection", (ws) => {
   }, 30000);
 
   ws.on("close", () => {
+    clients.delete(ws);
     clearInterval(interval);
-    console.log("ESP32 Disconnected");
+    console.log("Client Disconnected");
   });
 });
