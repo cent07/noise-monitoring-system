@@ -30,7 +30,7 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </nav>
 
 <div class="logout">
-<a href="#" id="logoutBtn">Logout</a>
+<a href="#">Logout</a>
 </div>
 
 </aside>
@@ -40,7 +40,7 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <h1 class="page-title">Noise Map</h1>
 
-<div class="devices-panel" style="margin-top:20px;">
+<div class="devices-panel">
 <h3>Realtime Classroom Noise Monitoring</h3>
 
 <div id="noiseMap"></div>
@@ -48,6 +48,16 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </div>
 
 </div>
+</div>
+
+<!-- AUDIO POPUP -->
+<div id="audioPopup" class="modal-overlay">
+  <div class="modal-card">
+    <h3 id="deviceLabel">Device</h3>
+
+    <button id="playAudio" class="btn-save">▶ Play</button>
+    <button id="stopAudio" class="btn-cancel">■ Stop</button>
+  </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

@@ -5,7 +5,6 @@
 <title>NoiseSense | Login</title>
 
 <style>
-/* ===== BASE ===== */
 *{
   box-sizing:border-box;
   font-family:'Segoe UI',sans-serif;
@@ -20,7 +19,40 @@ body{
   color:#e5e7eb;
 }
 
-/* ===== CARD ===== */
+/* FULLSCREEN LOADER */
+#pageLoader{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#020617;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .4s ease;
+}
+#pageLoader.active{
+  opacity:1;
+  pointer-events:all;
+}
+
+.loader-spinner{
+  width:50px;
+  height:50px;
+  border:5px solid #1e293b;
+  border-top:5px solid #22d3ee;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{
+  to{ transform:rotate(360deg); }
+}
+
+/* CARD */
 .auth-wrapper{
   width:420px;
   background:#020617;
@@ -29,7 +61,7 @@ body{
   overflow:hidden;
 }
 
-/* ===== HEADER ===== */
+/* HEADER */
 .auth-header{
   padding:20px;
   text-align:center;
@@ -38,7 +70,6 @@ body{
 .auth-header h1{
   margin:0;
   color:#22d3ee;
-  font-size:1.6rem;
 }
 .auth-header p{
   margin-top:6px;
@@ -46,7 +77,7 @@ body{
   color:#94a3b8;
 }
 
-/* ===== SOUND WAVE ===== */
+/* SOUND WAVE */
 .sound-wave{
   display:flex;
   justify-content:center;
@@ -61,17 +92,12 @@ body{
   border-radius:4px;
   animation:wave 1.2s infinite ease-in-out;
 }
-.sound-wave span:nth-child(1){animation-delay:0s}
-.sound-wave span:nth-child(2){animation-delay:.1s}
-.sound-wave span:nth-child(3){animation-delay:.2s}
-.sound-wave span:nth-child(4){animation-delay:.3s}
-.sound-wave span:nth-child(5){animation-delay:.4s}
 @keyframes wave{
   0%,100%{height:8px;opacity:.4}
   50%{height:30px;opacity:1}
 }
 
-/* ===== TABS ===== */
+/* TABS */
 .auth-tabs{
   display:flex;
 }
@@ -82,33 +108,21 @@ body{
   cursor:pointer;
   font-weight:600;
   color:#94a3b8;
-  background:#020617;
-  transition:.3s;
 }
-.auth-tabs div.active{
+.auth-tabs .active{
   color:#22d3ee;
-  background:#0f172a;
   border-bottom:2px solid #22d3ee;
 }
 
-/* ===== FORMS ===== */
+/* FORM */
 .form{
   padding:22px;
   display:none;
-  opacity:0;
-  transform:translateY(15px);
-  transition:.4s ease;
 }
 .form.active{
   display:block;
-  opacity:1;
-  transform:translateY(0);
 }
 
-label{
-  font-size:13px;
-  color:#94a3b8;
-}
 input{
   width:100%;
   padding:11px;
@@ -116,131 +130,192 @@ input{
   border-radius:8px;
   border:1px solid #1e293b;
   background:#0f172a;
-  color:#e5e7eb;
+  color:#fff;
 }
 
+/* BUTTON */
 button{
   width:100%;
   padding:11px;
   border:none;
   border-radius:8px;
   background:#22d3ee;
-  color:#020617;
   font-weight:700;
   cursor:pointer;
-}
-button:hover{
-  background:#0ea5e9;
+  transition:all .25s ease;
+  position:relative;
 }
 
-.auth-footer{
-  text-align:center;
-  padding:14px;
+button:active{
+  transform:scale(0.95);
+}
+
+button.loading{
+  pointer-events:none;
+  background:#0ea5e9;
+  color:transparent;
+}
+
+button.loading::after{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  border:3px solid #020617;
+  border-top:3px solid transparent;
+  border-radius:50%;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  animation:spin 0.8s linear infinite;
+}
+
+/* FORGOT */
+.forgot{
   font-size:12px;
-  color:#64748b;
-  border-top:1px solid #1e293b;
+  color:#94a3b8;
+  cursor:pointer;
+  text-align:right;
+  margin-top:-8px;
+  margin-bottom:12px;
+}
+.forgot:hover{
+  color:#22d3ee;
+}
+
+/* BACK BUTTON */
+.back-btn{
+  position:fixed;
+  top:20px;
+  left:20px;
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:#020617;
+  color:#22d3ee;
+  cursor:pointer;
+}
+/* REUSE SYSTEM STYLE */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.modal-overlay.show{
+  display:flex;
+}
+
+.modal-card{
+  background:#020617;
+  padding:20px;
+  border-radius:12px;
+  width:300px;
+  text-align:center;
+  border:1px solid #1e293b;
+}
+
+.modal-actions{
+  margin-top:15px;
+}
+
+.btn-confirm{
+  background:#22d3ee;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
+<div id="pageLoader">
+  <div class="loader-spinner"></div>
+</div>
+
+<div class="back-btn" onclick="goBack()">←</div>
+
 <div class="auth-wrapper">
 
-  <div class="auth-header">
-    <h1>🔊 NoiseSense</h1>
-    <p>Smart Noise Monitoring System</p>
-    <div class="sound-wave">
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
-  </div>
+<div class="auth-header">
+<h1>🔊 NoiseSense</h1>
+<p>Smart Noise Monitoring System</p>
+<div class="sound-wave">
+<span></span><span></span><span></span><span></span><span></span>
+</div>
+</div>
 
-  <div class="auth-tabs">
-    <div class="active" onclick="switchTab('login',this)">LOGIN</div>
-    <div onclick="switchTab('signup',this)">SIGN UP</div>
-  </div>
+<div class="auth-tabs">
+<div class="active" onclick="switchTab('login',this)">LOGIN</div>
+<div onclick="switchTab('signup',this)">SIGN UP</div>
+</div>
 
-  <!-- LOGIN -->
-  <div id="login" class="form active">
-    <label>Email</label>
-    <input id="loginEmail" type="email" placeholder="Enter email">
+<!-- LOGIN -->
+<div id="login" class="form active">
+<label>Email</label>
+<input id="loginEmail" type="email">
 
-    <label>Password</label>
-    <input id="loginPass" type="password" placeholder="Enter password">
+<label>Password</label>
+<input id="loginPass" type="password">
 
-    <button onclick="login()">LOGIN</button>
-  </div>
+<!-- 🔥 ITO LANG BINAGO -->
+<div class="forgot" onclick="pageLoader.classList.add('active'); setTimeout(()=>location.href='forgot.html',800)">
+Forgot Password?
+</div>
 
-  <!-- SIGN UP -->
-  <div id="signup" class="form">
-    <label>Email</label>
-    <input id="regEmail" type="email" placeholder="Enter email">
+<button id="loginBtn" onclick="login()">LOGIN</button>
+</div>
 
-    <label>Password</label>
-    <input id="regPass" type="password" placeholder="Create password">
-
-    <label>Confirm Password</label>
-    <input id="regConfirm" type="password" placeholder="Confirm password">
-
-    <button onclick="signup()">CREATE ACCOUNT</button>
-  </div>
-
-  <div class="auth-footer">
-    © 2026 NoiseSense System
-  </div>
+<!-- SIGNUP -->
+<div id="signup" class="form">
+<input id="regEmail" type="email" placeholder="Email">
+<input id="regPass" type="password" placeholder="Password">
+<input id="regConfirm" type="password" placeholder="Confirm Password">
+<button onclick="signup()">SIGN UP</button>
+</div>
 
 </div>
 
-<!-- ================= SUPABASE AUTH ================= -->
+<!-- ERROR MODAL -->
+<div id="errorModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3 style="color:#ef4444;">Login Error</h3>
+    <p id="errorMessage"></p>
+
+    <div class="modal-actions">
+      <button class="btn-confirm" id="closeError">OK</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
-import { createClient } from
-  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-const SUPABASE_URL = "https://vuzgotyghqsyjdjrbuwu.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1emdvdHlnaHFzeWpkanJidXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDAyMzYsImV4cCI6MjA4NTc3NjIzNn0.Dwpc6plq3t_y7PB_B4lejhfOPNkmXULYb3KIkakVsRU";
+const supabase = createClient(
+"https://vuzgotyghqsyjdjrbuwu.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1emdvdHlnaHFzeWpkanJidXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDAyMzYsImV4cCI6MjA4NTc3NjIzNn0.Dwpc6plq3t_y7PB_B4lejhfOPNkmXULYb3KIkakVsRU"
+);
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-/* already logged in? */
-const { data:{ session } } = await supabase.auth.getSession();
-if(session){
-  location.href = "index.html";
-}
-
-/* SIGN UP */
-window.signup = async () => {
-
-  const email = regEmail.value.trim();
-  const pass  = regPass.value.trim();
-  const conf  = regConfirm.value.trim();
-
-  if(!email || !pass){
-    alert("Complete all fields");
-    return;
-  }
-
-  if(pass !== conf){
-    alert("Passwords do not match");
-    return;
-  }
-
-  const { error } = await supabase.auth.signUp({
-    email,
-    password: pass
-  });
-
-  if(error){
-    alert(error.message);
-    return;
-  }
-
-  alert("Account created. You can now login.");
-  switchTab("login", document.querySelectorAll(".auth-tabs div")[0]);
+window.goBack = () => {
+  document.getElementById("pageLoader").classList.add("active");
+  setTimeout(()=>{
+    location.href = "Main.html";
+  },800);
 };
 
-
-/* LOGIN */
 window.login = async () => {
+
+  const btn = document.getElementById("loginBtn");
+  btn.classList.add("loading");
 
   const email = loginEmail.value.trim();
   const pass  = loginPass.value.trim();
@@ -251,22 +326,64 @@ window.login = async () => {
   });
 
   if(error){
-    alert(error.message);
-    return;
+  btn.classList.remove("loading");
+
+  const msg = document.getElementById("errorMessage");
+  const modal = document.getElementById("errorModal");
+
+  // CUSTOM MESSAGE (mas professional)
+  if(error.message.includes("Invalid login")){
+    msg.textContent = "Invalid email or password.";
+  }else if(error.message.includes("missing email")){
+    msg.textContent = "Please enter your email and password.";
+  }else{
+    msg.textContent = error.message;
   }
 
-  location.href = "index.html";
+  modal.classList.add("show");
+  return;
+}
+
+  document.getElementById("pageLoader").classList.add("active");
+
+  setTimeout(()=>{
+    window.location.href = "index.html";
+  },800);
+};
+
+window.signup = async () => {
+const email=regEmail.value;
+const pass=regPass.value;
+const conf=regConfirm.value;
+
+if(pass!==conf){ alert("Passwords do not match"); return; }
+
+await supabase.auth.signUp({email,password:pass});
+alert("Account created");
+};
+
+window.forgotPassword = async () => {
+  // (hindi na ginagamit pero di tinanggal)
+};
+
+document.getElementById("login").addEventListener("keydown",(e)=>{
+if(e.key==="Enter"){
+login();
+}
+});
+
+window.switchTab=(tab,el)=>{
+document.querySelectorAll(".form").forEach(f=>f.classList.remove("active"));
+document.querySelectorAll(".auth-tabs div").forEach(t=>t.classList.remove("active"));
+document.getElementById(tab).classList.add("active");
+el.classList.add("active");
+
+};
+document.getElementById("closeError").onclick = ()=>{
+  document.getElementById("errorModal").classList.remove("show");
 };
 
 
-/* UI */
-window.switchTab = (tab, el) => {
-  document.querySelectorAll(".form").forEach(f => f.classList.remove("active"));
-  document.querySelectorAll(".auth-tabs div").forEach(t => t.classList.remove("active"));
-  document.getElementById(tab).classList.add("active");
-  el.classList.add("active");
-};
 </script>
-
 </body>
 </html>

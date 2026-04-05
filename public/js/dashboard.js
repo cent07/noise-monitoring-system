@@ -93,7 +93,7 @@ return;
 const last=new Date(data.created_at).getTime();
 const now=Date.now();
 
-if((now-last)/1000 > 6){
+if((now-last)/1000 > 3){
 setOffline();
 }else{
 setOnline();
@@ -131,14 +131,24 @@ if(row.device_name!==currentDevice) return;
 const noise=Number(row.db || 0);
 const status=row.status || "-";
 
+/* UPDATE UI */
 avgNoise.innerText=noise.toFixed(1)+" dB";
 activeAlerts.innerText=status==="CRITICAL"?1:0;
 
+/* UPDATE GRAPH */
 if(window.updateNoiseGraph){
-window.updateNoiseGraph(noise,isHistory);
+
+// 👉 history = bulk load
+if(isHistory){
+window.updateNoiseGraph(noise, "history");
 }
 
-setOnline();
+// 👉 realtime = live update
+else{
+window.updateNoiseGraph(noise, "live");
+}
+
+}
 
 }
 
@@ -203,3 +213,9 @@ loadDevices();
 /* START */
 
 loadDevices();
+
+setInterval(()=>{
+if(currentDevice){
+checkDeviceOnline();
+}
+},1000);

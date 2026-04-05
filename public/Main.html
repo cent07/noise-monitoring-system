@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NoiseSense</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+body{
+  margin:0;
+  font-family:'Inter', sans-serif;
+  background:#020617;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* BACKGROUND */
+#bg{
+  position:fixed;
+  width:100%;
+  height:100%;
+  z-index:0;
+  opacity:0.4;
+}
+
+/* HEADER FIXED */
+.topbar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 60px; /* FIX */
+  box-sizing:border-box; /* FIX */
+  z-index:9999;
+  background:rgba(2,6,23,0.85);
+  backdrop-filter:blur(10px);
+}
+
+.brand{
+  color:#22d3ee;
+  font-weight:700;
+}
+
+.actions{
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.actions a{
+  color:#94a3b8;
+  text-decoration:none;
+}
+
+.login-btn{
+  background:#22d3ee;
+  color:#000 !important;
+  padding:8px 18px;
+  border-radius:20px;
+  font-weight:600;
+}
+
+/* HERO */
+.hero{
+  margin-top:70px;
+  height:50vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.hero h1{
+  text-align:center;
+  max-width:900px;
+}
+
+/* DASHBOARD */
+.dashboard-preview{
+  padding:60px 40px;
+  text-align:center;
+  max-width:1200px;
+  margin:auto;
+}
+
+.preview-container{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.noise-card{
+  width:240px;
+  background:#0f172a;
+  padding:20px;
+  border-radius:12px;
+}
+
+.noise-value{
+  font-size:48px;
+  font-weight:800;
+}
+
+/* GRAPH */
+.graph-preview{
+  flex:1;
+  min-width:500px;
+  height:300px;
+  background:#0f172a;
+  border-radius:12px;
+  padding:15px;
+}
+
+#smoothChart{
+  width:100%!important;
+  height:100%!important;
+}
+
+/* MAP */
+.map-section{
+  padding:60px;
+  text-align:center;
+  max-width:1200px;
+  margin:auto;
+}
+
+#previewMap{
+  height:450px;
+  border-radius:12px;
+}
+
+#mapOverlay{
+  position:absolute;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.6);
+  padding:8px 16px;
+  border-radius:20px;
+  font-size:12px;
+  color:#22d3ee;
+}
+
+/* CLICK WAVE */
+.click-wave{
+  position:absolute;
+  width:20px;height:20px;
+  border:2px solid #22d3ee;
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(0);
+  animation:ripple 1s ease-out forwards;
+  z-index:9999;
+}
+@keyframes ripple{
+  0%{transform:translate(-50%,-50%) scale(0);opacity:1;}
+  100%{transform:translate(-50%,-50%) scale(8);opacity:0;}
+}
+
+/* FOOTER */
+.footer{
+  background:#020617;
+  color:#94a3b8;
+  padding:60px;
+  margin-top:80px;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+
+.footer-container{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:40px;
+}
+
+.footer-col{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-width:200px;
+}
+
+.footer-col h4{
+  color:#fff;
+  font-size:14px;
+}
+
+.footer-col a{
+  text-decoration:none;
+  color:#94a3b8;
+  font-size:13px;
+}
+
+.footer-col a:hover{
+  color:#22d3ee;
+}
+
+.footer-bottom{
+  margin-top:40px;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  font-size:12px;
+  color:#64748b;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<!-- HEADER -->
+<div class="topbar">
+  <div class="brand">NoiseSense</div>
+  <div class="actions">
+    <a href="#">About</a>
+    <a href="auth.html" class="login-btn">Login</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>TAHIMIK-HERO</h1>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard-preview">
+<h2>System Monitoring Preview</h2>
+
+<div class="preview-container">
+
+<div class="noise-card">
+<h3>LIVE NOISE</h3>
+<div id="noiseValue" class="noise-value">30</div>
+</div>
+
+<div class="graph-preview">
+<canvas id="smoothChart"></canvas>
+</div>
+
+</div>
+</div>
+
+<!-- MAP -->
+<div class="map-section">
+<h2>Live Noise Map</h2>
+<div style="position:relative;">
+  <div id="mapOverlay">Click map to interact</div>
+  <div id="previewMap"></div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="#">Find Device</a>
+      <a href="#">Noise Guide</a>
+      <a href="#">Advice</a>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <a href="#">Get Help</a>
+      <a href="#">Status</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About NoiseSense</a>
+      <a href="#">Careers</a>
+      <a href="#">Privacy</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 NoiseSense</span>
+    <span>Philippines</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+/* MAP */
+const map=L.map('previewMap').setView([13.9419,121.1638],18);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+map.scrollWheelZoom.disable();
+map.dragging.disable();
+
+map.on("click",()=>{
+  map.scrollWheelZoom.enable();
+  map.dragging.enable();
+  document.getElementById("mapOverlay").style.display="none";
+});
+
+document.addEventListener("click",(e)=>{
+  if(!document.getElementById("previewMap").contains(e.target)){
+    map.scrollWheelZoom.disable();
+    map.dragging.disable();
+    document.getElementById("mapOverlay").style.display="block";
+  }
+});
+
+/* AUDIO (SUPER SENSITIVE) */
+let audioData=null;
+let audioCtx=null;
+window.liveVolume=0;
+
+async function initAudio(){
+try{
+const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+audioCtx=new AudioContext();
+
+const analyser=audioCtx.createAnalyser();
+const src=audioCtx.createMediaStreamSource(stream);
+
+src.connect(analyser);
+analyser.fftSize=256;
+
+audioData=new Uint8Array(analyser.frequencyBinCount);
+
+function update(){
+analyser.getByteTimeDomainData(audioData);
+
+let sum=0;
+for(let i=0;i<audioData.length;i++){
+let v=(audioData[i]-128)/128;
+sum+=v*v;
+}
+let rms=Math.sqrt(sum/audioData.length);
+
+// 🔥 MALAKAS DETECTION
+window.liveVolume = Math.pow(rms,0.7)*600;
+
+requestAnimationFrame(update);
+}
+update();
+}catch(e){}
+}
+initAudio();
+
+document.addEventListener("click",()=>{
+if(audioCtx && audioCtx.state==="suspended"){
+audioCtx.resume();
+}
+});
+
+/* GRAPH */
+const chart=new Chart(document.getElementById("smoothChart"),{
+type:"line",
+data:{
+labels:Array(60).fill(""),
+datasets:[{
+data:Array(60).fill(30),
+borderColor:"#22d3ee",
+tension:0.4,
+pointRadius:0
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false,
+animation:false,
+plugins:{legend:{display:false}},
+scales:{x:{display:false},y:{min:20,max:100}}
+}
+});
+
+let displayValue=30;
+
+function getLiveValue(){
+if(window.liveVolume){
+return Math.min(Math.max(window.liveVolume,20),90);
+}
+return displayValue+(Math.random()*6-3);
+}
+
+function updateGraph(){
+let target=getLiveValue();
+
+// 🔥 MAS RESPONSIVE
+displayValue = displayValue*0.7 + target*0.3;
+
+displayValue=Math.min(Math.max(displayValue,20),90);
+
+chart.data.datasets[0].data.push(displayValue);
+chart.data.datasets[0].data.shift();
+chart.update();
+
+document.getElementById("noiseValue").innerText=Math.round(displayValue);
+
+setTimeout(updateGraph,120);
+}
+updateGraph();
+
+/* BACKGROUND */
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+}
+resize();
+
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+let base=displayValue;
+let bars=60;
+let w=canvas.width/bars;
+let center=canvas.height/2;
+
+for(let i=0;i<bars;i++){
+
+let h = base*(Math.random()*1.2+0.8);
+
+ctx.shadowBlur = base*0.8;
+ctx.shadowColor = "#22d3ee";
+
+ctx.fillStyle="rgba(34,211,238,0.7)";
+ctx.fillRect(i*w,center-h/2,w-3,h/2);
+ctx.fillRect(i*w,center,w-3,h/2);
+}
+
+requestAnimationFrame(draw);
+}
+draw();
+
+/* CLICK WAVE */
+document.addEventListener("click",(e)=>{
+const wave=document.createElement("div");
+wave.className="click-wave";
+wave.style.left=e.pageX+"px";
+wave.style.top=e.pageY+"px";
+document.body.appendChild(wave);
+setTimeout(()=>wave.remove(),1000);
+});
+
+</script>
+
+</body>
+</html>

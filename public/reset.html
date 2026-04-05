@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reset Password</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0f172a;
+  color:#fff;
+  font-family:sans-serif;
+}
+
+.box{
+  width:400px;
+  background:#020617;
+  padding:30px;
+  border-radius:12px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-bottom:15px;
+  background:#0f172a;
+  border:1px solid #1e293b;
+  color:#fff;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:#22d3ee;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>Set New Password</h2>
+
+<input id="newPass" type="password" placeholder="New password">
+<input id="confirmPass" type="password" placeholder="Confirm password">
+
+<button onclick="resetPass()">UPDATE PASSWORD</button>
+</div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+const supabase = createClient(
+"https://vuzgotyghqsyjdjrbuwu.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1emdvdHlnaHFzeWpkanJidXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDAyMzYsImV4cCI6MjA4NTc3NjIzNn0.Dwpc6plq3t_y7PB_B4lejhfOPNkmXULYb3KIkakVsRU"
+);
+
+async function resetPass(){
+
+  const pass = newPass.value;
+  const conf = confirmPass.value;
+
+  if(pass !== conf){
+    alert("Passwords do not match");
+    return;
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: pass
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("Password updated!");
+  location.href="auth.html";
+}
+</script>
+
+</body>
+</html>

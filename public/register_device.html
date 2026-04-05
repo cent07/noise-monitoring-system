@@ -4,225 +4,115 @@
 <meta charset="UTF-8">
 <title>NoiseSense | Register Device</title>
 
-<style>
-body{
-  margin:0;
-  font-family:Segoe UI,Arial,sans-serif;
-  background:#0f172a;
-  color:#e5e7eb;
-}
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-.topbar{
-  background:#020617;
-  padding:15px 30px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid #1e293b;
-}
-
-.logo{
-  font-weight:bold;
-  color:#22d3ee;
-  font-size:1.4rem;
-}
-
-nav a{
-  color:#94a3b8;
-  margin-left:20px;
-  text-decoration:none;
-  font-weight:bold;
-}
-
-nav a:hover{ color:#22d3ee; }
-
-.container{
-  max-width:420px;
-  margin:60px auto;
-  background:#020617;
-  padding:26px;
-  border-radius:14px;
-  border:1px solid #1e293b;
-  box-shadow:0 15px 35px rgba(0,0,0,.45);
-}
-
-h2{
-  text-align:center;
-  color:#22d3ee;
-  margin-bottom:14px;
-}
-
-input,button{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:10px;
-  border:none;
-  box-sizing:border-box;
-}
-
-input{
-  background:#1e293b;
-  color:#e5e7eb;
-}
-
-button{
-  background:#22d3ee;
-  color:#020617;
-  font-weight:700;
-  cursor:pointer;
-}
-
-button:hover{ background:#0ea5e9; }
-
-/* ===== MODALS ===== */
-
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(2,6,23,.75);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s ease;
-}
-
-.modal-overlay.show{
-  opacity:1;
-  pointer-events:auto;
-}
-
-.modal-card{
-  width:360px;
-  background:linear-gradient(180deg,#1e293b,#162033);
-  border:1px solid #1e293b;
-  border-radius:16px;
-  padding:24px;
-  text-align:center;
-}
-
-.modal-card h3{
-  margin:0;
-  color:#22d3ee;
-}
-
-.modal-card p{
-  margin:14px 0 20px;
-  font-size:14px;
-  color:#cbd5f5;
-}
-
-.modal-actions{
-  display:flex;
-  gap:12px;
-}
-
-.modal-actions button{
-  flex:1;
-  padding:10px;
-  border-radius:10px;
-  border:none;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.btn-cancel{
-  background:#020617;
-  color:#cbd5f5;
-  border:1px solid #1e293b;
-}
-
-.btn-confirm{
-  background:linear-gradient(135deg,#22d3ee,#0ea5e9);
-  color:#020617;
-}
-
-.btn-error{
-  background:linear-gradient(135deg,#ef4444,#f97316);
-  color:white;
-}
-</style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="logo">🔊 NoiseSense</div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="register_device.html">Register Device</a>
-    <a href="#" id="logoutBtn">Logout</a>
-  </nav>
-</header>
+<div class="app-layout">
 
-<div class="container">
-  <h2>Register Device</h2>
+<!-- SIDEBAR -->
+<aside class="sidebar">
 
-  <input id="deviceName" placeholder="Device name (ex: ESP32_1)">
-  <input id="location" placeholder="Location (ex: CCTE dept)">
+<div class="logo">⚡ NoiseSense</div>
 
-  <button id="openConfirm">Register Device</button>
+<nav class="menu">
+<a href="index.html">Dashboard</a>
+<a href="threshold.html">Threshold Rules</a>
+<a href="alerts.html">Alerts</a>
+<a href="map.html">Noise Map</a>
+<a href="reports.html">Reports</a>
+<a href="register_device.html" class="active">Register Device</a>
+</nav>
+
+<div class="logout">
+<a href="#" id="logoutBtn">Logout</a>
+</div>
+
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+
+<h1 class="page-title">Register Device</h1>
+
+<div class="devices-panel" style="max-width:500px;">
+
+<h3>Add New Device</h3>
+
+<input id="deviceName" class="alert-search" placeholder="Device name (ex: ESP32_1)">
+<input id="location" class="alert-search" placeholder="Location (ex: CCTE dept)">
+
+<button id="openConfirm" class="btn-save" style="margin-top:10px;">
+Register Device
+</button>
+
+</div>
+
+</div>
+
 </div>
 
 <!-- CONFIRM MODAL -->
 <div id="registerModal" class="modal-overlay">
-  <div class="modal-card">
-    <h3>Confirm registration</h3>
-    <p>
-      Device : <b id="cDevice"></b><br>
-      Location : <b id="cLocation"></b>
-    </p>
+<div class="modal-card">
+<h3>Confirm registration</h3>
 
-    <div class="modal-actions">
-      <button class="btn-cancel" id="cancelRegister">Cancel</button>
-      <button class="btn-confirm" id="confirmRegister">Register</button>
-    </div>
-  </div>
+<p>
+Device : <b id="cDevice"></b><br>
+Location : <b id="cLocation"></b>
+</p>
+
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelRegister">Cancel</button>
+<button class="btn-save" id="confirmRegister">Register</button>
+</div>
+
+</div>
 </div>
 
 <!-- DUPLICATE MODAL -->
 <div id="duplicateModal" class="modal-overlay">
-  <div class="modal-card">
-    <h3>Device already exists</h3>
-    <p>
-      <b id="dupDevice"></b> is already registered.
-    </p>
+<div class="modal-card">
+<h3>Device already exists</h3>
 
-    <div class="modal-actions">
-      <button class="btn-error" id="closeDuplicate">OK</button>
-    </div>
-  </div>
+<p>
+<b id="dupDevice"></b> is already registered.
+</p>
+
+<div class="modal-actions">
+<button class="btn-cancel" id="closeDuplicate">OK</button>
+</div>
+
+</div>
 </div>
 
 <script type="module">
+
 import { createClient } from
-  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-const SUPABASE_URL = "https://vuzgotyghqsyjdjrbuwu.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1emdvdHlnaHFzeWpkanJidXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDAyMzYsImV4cCI6MjA4NTc3NjIzNn0.Dwpc6plq3t_y7PB_B4lejhfOPNkmXULYb3KIkakVsRU";
+const supabase = createClient(
+"https://vuzgotyghqsyjdjrbuwu.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1emdvdHlnaHFzeWpkanJidXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDAyMzYsImV4cCI6MjA4NTc3NjIzNn0.Dwpc6plq3t_y7PB_B4lejhfOPNkmXULYb3KIkakVsRU"
+);
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+/* AUTH */
 
-const { data:{ user } } = await supabase.auth.getUser();
+const { data:{ session } } = await supabase.auth.getSession();
+if(!session) location.href="auth.html";
 
-if(!user){
-  alert("Session expired. Please login again.");
-  location.href = "auth.html";
-  throw new Error("Not logged in");
-}
-
-/* ===== LOGOUT ===== */
+/* LOGOUT */
 
 document.getElementById("logoutBtn").onclick = async (e)=>{
-  e.preventDefault();
-  await supabase.auth.signOut();
-  location.href="auth.html";
+e.preventDefault();
+await supabase.auth.signOut();
+location.href="auth.html";
 };
 
-/* ===== ELEMENTS ===== */
+/* ELEMENTS */
 
 const deviceNameInput = document.getElementById("deviceName");
 const locationInput   = document.getElementById("location");
@@ -240,84 +130,71 @@ const cLocation = document.getElementById("cLocation");
 const dupDevice = document.getElementById("dupDevice");
 const closeDuplicate = document.getElementById("closeDuplicate");
 
-/* ===== OPEN CONFIRM ===== */
+/* OPEN CONFIRM */
 
 openConfirm.onclick = ()=>{
 
-  const name = deviceNameInput.value.trim();
-  const loc  = locationInput.value.trim();
+const name = deviceNameInput.value.trim();
+const loc  = locationInput.value.trim();
 
-  if(!name || !loc){
-    alert("Please complete all fields.");
-    return;
-  }
+if(!name || !loc){
+alert("Please complete all fields.");
+return;
+}
 
-  cDevice.textContent   = name;
-  cLocation.textContent = loc;
+cDevice.textContent   = name;
+cLocation.textContent = loc;
 
-  registerModal.classList.add("show");
+registerModal.classList.add("show");
 };
 
 cancelRegister.onclick = ()=>{
-  registerModal.classList.remove("show");
+registerModal.classList.remove("show");
 };
 
 closeDuplicate.onclick = ()=>{
-  duplicateModal.classList.remove("show");
+duplicateModal.classList.remove("show");
 };
 
-/* ===== REGISTER ===== */
+/* REGISTER */
 
 confirmRegister.onclick = async ()=>{
 
-  registerModal.classList.remove("show");
+registerModal.classList.remove("show");
 
-  const name = deviceNameInput.value.trim();
-  const loc  = locationInput.value.trim();
+const name = deviceNameInput.value.trim();
+const loc  = locationInput.value.trim();
 
-  const { data:existing, error:checkErr } = await supabase
-    .from("devices")
-    .select("id")
-    .eq("device_name",name)
-    .maybeSingle();
+const { data:existing } = await supabase
+.from("devices")
+.select("id")
+.eq("device_name",name)
+.maybeSingle();
 
-  if(checkErr){
-    alert("Error checking device");
-    return;
-  }
+if(existing){
+dupDevice.textContent = name;
+duplicateModal.classList.add("show");
+return;
+}
 
-  if(existing){
-    dupDevice.textContent = name;
-    duplicateModal.classList.add("show");
-    return;
-  }
+const { error } = await supabase
+.from("devices")
+.insert({
+device_name:name,
+location:loc
+});
 
-  const { data, error } = await supabase
-  .from("devices")
-  .insert({
-    device_name:name,
-    location:loc
-  });
+if(error){
+alert(error.message);
+return;
+}
 
-console.log("insert result:", data);
-console.log("insert error:", error);
+setTimeout(()=>{
+location.href="index.html";
+},600);
 
-  if(error){
-
-    if(error.code==="23505"){
-      dupDevice.textContent = name;
-      duplicateModal.classList.add("show");
-      return;
-    }
-
-    alert(error.message);
-    return;
-  }
-
-  setTimeout(()=>{
-    location.href="index.html";
-  },600);
 };
+
 </script>
 
 </body>

@@ -1,53 +1,71 @@
-const express = require("express")
-const http = require("http")
-const WebSocket = require("ws")
+const express = require("express");
+const WebSocket = require("ws");
+const { RTCPeerConnection, nonstandard } = require("wrtc");
 
-const app = express()
-const server = http.createServer(app)
-const wss = new WebSocket.Server({ server })
+const app = express();
+app.use(express.json());
 
-let admins = []
-let devices = {}
+// Render uses dynamic port
+const PORT = process.env.PORT || 10000;
 
-wss.on("connection",(ws)=>{
+// ================= HTTP SERVER =================
+const server = app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});
 
-console.log("Client connected")
+// ================= WEBSOCKET (ESP32) =================
+const wss = new WebSocket.Server({ server });
 
-ws.on("message",(msg)=>{
+let audioSource = new nonstandard.RTCAudioSource();
+let track = audioSource.createTrack();
 
-let data
-try{ data = JSON.parse(msg) }catch{}
+wss.on("connection", (ws) => {
+  console.log("ESP32 Connected");
 
-if(data?.type === "admin"){
-admins.push(ws)
-console.log("Admin connected")
-return
-}
+  ws.on("message", (data) => {
+    try {
+      // convert buffer → Int16
+      const samples = new Int16Array(data);
 
-if(data?.type === "device"){
-devices[data.device_id] = ws
-console.log("Device:",data.device_id)
-return
-}
+      audioSource.onData({
+        samples: samples,
+        sampleRate: 16000,
+        bitsPerSample: 16,
+        channelCount: 1,
+      });
 
-// broadcast audio
-admins.forEach(a=>{
-if(a.readyState===1){
-a.send(msg)
-}
-})
+    } catch (err) {
+      console.log("Audio error:", err);
+    }
+  });
 
-})
+  ws.on("close", () => {
+    console.log("ESP32 Disconnected");
+  });
+});
 
-})
+// ================= WEBRTC =================
+let peerConnection;
 
-app.get("/",(req,res)=>{
-res.send("NoiseSense Audio Server Running")
-})
+app.post("/offer", async (req, res) => {
+  try {
+    peerConnection = new RTCPeerConnection({
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" }
+      ]
+    });
 
-// ⭐⭐⭐ IMPORTANT FOR RENDER ⭐⭐⭐
-const PORT = process.env.PORT || 3000
+    peerConnection.addTrack(track);
 
-server.listen(PORT,()=>{
-console.log("Server running on port " + PORT)
-})
+    await peerConnection.setRemoteDescription(req.body);
+
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+
+    res.json(peerConnection.localDescription);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error");
+  }
+});
