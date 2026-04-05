@@ -14,7 +14,10 @@ const server = app.listen(PORT, () => {
 });
 
 // ================= WEBSOCKET (ESP32) =================
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ 
+  server,
+  path: "/"
+});
 
 let audioSource = new nonstandard.RTCAudioSource();
 let track = audioSource.createTrack();
@@ -24,7 +27,6 @@ wss.on("connection", (ws) => {
 
   ws.on("message", (data) => {
     try {
-      // convert buffer → Int16
       const samples = new Int16Array(data);
 
       audioSource.onData({
@@ -39,7 +41,15 @@ wss.on("connection", (ws) => {
     }
   });
 
+  // ✅ KEEP ALIVE (IMPORTANT)
+  const interval = setInterval(() => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.ping();
+    }
+  }, 30000);
+
   ws.on("close", () => {
+    clearInterval(interval);
     console.log("ESP32 Disconnected");
   });
 });
