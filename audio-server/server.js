@@ -10,7 +10,6 @@ const server = app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
 
-// ================= WEBSOCKET =================
 const wss = new WebSocket.Server({ 
   server,
   path: "/"
@@ -27,15 +26,14 @@ wss.on("connection", (ws) => {
   ws.on("message", (data) => {
     console.log("Audio chunk received:", data.length);
 
-    // 🔥 BROADCAST SA LAHAT NG CLIENT (browser)
+    // ✅ BROADCAST SA LAHAT (INCLUDING BROWSER)
     clients.forEach(client => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
+      if (client.readyState === WebSocket.OPEN) {
         client.send(data);
       }
     });
   });
 
-  // KEEP ALIVE
   const interval = setInterval(() => {
     if (ws.readyState === WebSocket.OPEN) {
       ws.ping();
