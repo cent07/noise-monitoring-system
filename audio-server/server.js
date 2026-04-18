@@ -8,46 +8,72 @@ const server = app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
 
-// 🔥 store per device
-const devices = {};
-let counter = 1;
-const url = new URL(request.url, "http://localhost");
-const device = url.searchParams.get("device");
+const wssSend = new WebSocket.Server({ server, path: "/send" });
+const wssListen = new WebSocket.Server({ server, path: "/ws" });
 
-const wss = new WebSocket.Server({ server, path: "/" });
+const deviceClients = {};
 
-wss.on("connection", (ws) => {
-
-  // 👉 AUTO ASSIGN DEVICE
-  const device = "ESP32_" + counter++;
-  console.log("Connected:", device);
-
-  if (!devices[device]) {
-    devices[device] = new Set();
-  }
-
-  devices[device].add(ws);
-
-  ws.deviceName = device;
+// ================= ESP32 =================
+wssSend.on("connection", (ws) => {
+  console.log("📡 ESP32 connected");
 
   ws.on("message", (data) => {
+    try {
+      const parsed = JSON.parse(data.toString());
+      const device = parsed.device;
+      const audio = parsed.audio;
 
-    // 👉 send ONLY to same device
-    devices[device].forEach(client => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(data);
+      if (!device || !audio) return;
+
+      if (!deviceClients[device]) {
+        deviceClients[device] = new Set();
       }
-    });
 
+      console.log("🎤 From:", device, "| listeners:", deviceClients[device].size);
+
+      deviceClients[device].forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(audio);
+        }
+      });
+
+    } catch (err) {
+      console.log("❌ parse error:", err);
+    }
   });
 
   ws.on("close", () => {
-    devices[device].delete(ws);
+    console.log("ESP32 disconnected");
+  });
+});
 
-    if (devices[device].size === 0) {
-      delete devices[device];
+// ================= BROWSER =================
+wssListen.on("connection", (ws, req) => {
+
+  const parts = req.url.split("/");
+  const device = parts.length >= 3 ? parts[2] : null;
+
+  if (!device) {
+    console.log("❌ Invalid WS path:", req.url);
+    ws.close();
+    return;
+  }
+
+  console.log("🧑‍💻 Listener for:", device);
+
+  if (!deviceClients[device]) {
+    deviceClients[device] = new Set();
+  }
+
+  deviceClients[device].add(ws);
+
+  ws.on("close", () => {
+    deviceClients[device].delete(ws);
+
+    if (deviceClients[device].size === 0) {
+      delete deviceClients[device];
     }
 
-    console.log("Disconnected:", device);
+    console.log("❌ Listener left:", device);
   });
 });
