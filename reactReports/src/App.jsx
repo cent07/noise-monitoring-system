@@ -1,175 +1,125 @@
 import { useEffect, useState } from "react";
 import {
-ResponsiveContainer,
-AreaChart,
-Area,
-XAxis,
-YAxis,
-Tooltip,
-CartesianGrid,
-BarChart,
-Bar,
-LineChart,
-Line
+  LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer
 } from "recharts";
 
-import dayjs from "dayjs";
-import { supabase } from "./supabase";
-import "./App.css";
+const SUPABASE_URL = "https://vuzgotyghqsyjdjrbuwu.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1emdvdHlnaHFzeWpkanJidXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDAyMzYsImV4cCI6MjA4NTc3NjIzNn0.Dwpc6plq3t_y7PB_B4lejhfOPNkmXULYb3KIkakVsRU"; // palitan mo
 
 export default function App() {
 
-const [daily,setDaily] = useState([]);
-const [weekly,setWeekly] = useState([]);
-const [monthly,setMonthly] = useState([]);
-const [loading,setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [range, setRange] = useState("daily");
 
-useEffect(()=>{
-loadReports();
-},[]);
+  useEffect(() => {
+    loadData();
+  }, [range]);
 
-async function loadReports(){
+  async function loadData() {
 
-const { data, error } = await supabase
-.from("device_readings")
-.select("*")
-.order("created_at",{ascending:true});
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/device_readings?select=db,created_at`,
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    );
 
-if(error){
-console.log(error);
-return;
-}
+    const raw = await res.json();
+    processData(raw);
+  }
 
-const dailyMap = {};
-const weeklyMap = {};
-const monthlyMap = {};
+  function processData(raw) {
 
-data.forEach(row=>{
+    let map = {};
 
-const value = row.noise_level; // ⭐ CHANGE if column different
-const date = dayjs(row.created_at);
+    raw.forEach(r => {
+      let d = new Date(r.created_at);
+      let key;
 
-const dayKey = date.format("YYYY-MM-DD");
-const weekKey = date.week();
-const monthKey = date.format("YYYY-MM");
+      if (range === "daily") {
+        key = d.toISOString().split("T")[0];
+      }
 
-if(!dailyMap[dayKey]) dailyMap[dayKey] = [];
-if(!weeklyMap[weekKey]) weeklyMap[weekKey] = [];
-if(!monthlyMap[monthKey]) monthlyMap[monthKey] = [];
+      if (range === "weekly") {
+        const week = Math.ceil(d.getDate() / 7);
+        key = `Week ${week}`;
+      }
 
-dailyMap[dayKey].push(value);
-weeklyMap[weekKey].push(value);
-monthlyMap[monthKey].push(value);
+      if (range === "monthly") {
+        key = `${d.getFullYear()}-${d.getMonth()+1}`;
+      }
 
-});
+      if (!map[key]) map[key] = { total: 0, count: 0 };
 
-const avg = arr => arr.reduce((a,b)=>a+b,0)/arr.length;
+      map[key].total += r.db;
+      map[key].count++;
+    });
 
-setDaily(
-Object.keys(dailyMap).map(k=>({
-date:k,
-avg:avg(dailyMap[k]).toFixed(2)
-}))
-);
+    const result = Object.keys(map).map(k => ({
+      name: k,
+      avg: (map[k].total / map[k].count).toFixed(1)
+    }));
 
-setWeekly(
-Object.keys(weeklyMap).map(k=>({
-week:k,
-avg:avg(weeklyMap[k]).toFixed(2)
-}))
-);
+    setData(result);
+  }
 
-setMonthly(
-Object.keys(monthlyMap).map(k=>({
-month:k,
-avg:avg(monthlyMap[k]).toFixed(2)
-}))
-);
+  return (
+    <div style={{ padding: "20px" }}>
 
-setLoading(false);
+      <h2 style={{ marginBottom: "10px" }}>Noise Analytics</h2>
 
-}
+      {/* FILTER */}
+      <select
+        value={range}
+        onChange={(e)=>setRange(e.target.value)}
+        style={{
+          padding:"8px 12px",
+          borderRadius:"8px",
+          border:"1px solid #ccc",
+          marginBottom:"15px"
+        }}
+      >
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
 
-if(loading) return <div className="loading">Loading Reports...</div>;
+      {/* ⭐ STEP 3: PREMIUM CARD UI */}
+      <div style={{
+        background:"#ffffff",
+        padding:"20px",
+        borderRadius:"16px",
+        boxShadow:"0 10px 30px rgba(0,0,0,0.08)"
+      }}>
 
-return (
-<div className="reports-wrapper">
+        <div style={{ height: 400 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data}>
+              
+              <CartesianGrid strokeDasharray="3 3" />
 
-{/* DAILY */}
-<div className="report-card">
-<h3>Daily Noise Trend</h3>
+              <XAxis dataKey="name" />
+              <YAxis />
 
-<ResponsiveContainer width="100%" height={260}>
-<AreaChart data={daily}>
-<defs>
-<linearGradient id="colorNoise" x1="0" y1="0" x2="0" y2="1">
-<stop offset="5%" stopColor="#4f46e5" stopOpacity={0.8}/>
-<stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
-</linearGradient>
-</defs>
+              <Tooltip />
 
-<CartesianGrid strokeDasharray="3 3" />
-<XAxis dataKey="date"/>
-<YAxis/>
-<Tooltip/>
+              <Line 
+                type="monotone" 
+                dataKey="avg" 
+                stroke="#3b82f6"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+              />
 
-<Area
-type="monotone"
-dataKey="avg"
-stroke="#4f46e5"
-fillOpacity={1}
-fill="url(#colorNoise)"
-strokeWidth={3}
-/>
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
 
-</AreaChart>
-</ResponsiveContainer>
-</div>
+      </div>
 
-{/* WEEKLY */}
-<div className="report-card">
-<h3>Weekly Average</h3>
-
-<ResponsiveContainer width="100%" height={260}>
-<BarChart data={weekly}>
-<CartesianGrid strokeDasharray="3 3"/>
-<XAxis dataKey="week"/>
-<YAxis/>
-<Tooltip/>
-
-<Bar
-dataKey="avg"
-fill="#22c55e"
-radius={[8,8,0,0]}
-/>
-
-</BarChart>
-</ResponsiveContainer>
-</div>
-
-{/* MONTHLY */}
-<div className="report-card">
-<h3>Monthly Noise Trend</h3>
-
-<ResponsiveContainer width="100%" height={260}>
-<LineChart data={monthly}>
-<CartesianGrid strokeDasharray="3 3"/>
-<XAxis dataKey="month"/>
-<YAxis/>
-<Tooltip/>
-
-<Line
-type="monotone"
-dataKey="avg"
-stroke="#f97316"
-strokeWidth={4}
-dot={{r:6}}
-/>
-
-</LineChart>
-</ResponsiveContainer>
-</div>
-
-</div>
-);
+    </div>
+  );
 }

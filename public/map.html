@@ -5,63 +5,129 @@
 <title>NoiseSense | Noise Map</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/map.css">
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 
 <body>
 
 <div class="app-layout">
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
+  <!-- ===== SIDEBAR (DO NOT TOUCH) ===== -->
+  <aside class="sidebar">
+    <div class="logo">⚡ NoiseSense</div>
 
-<div class="logo">⚡ NoiseSense</div>
+    <nav class="menu">
+      <a href="index.html">Dashboard</a>
+      <a href="threshold.html">Threshold Rules</a>
+      <a href="alerts.html">Alerts</a>
+      <a href="map.html" class="active">Noise Map</a>
+      <a href="reports.html">Reports</a>
+      <a href="register_device.html">Register Device</a>
+    </nav>
 
-<nav class="menu">
-<a href="index.html">Dashboard</a>
-<a href="threshold.html">Threshold Rules</a>
-<a href="alerts.html">Alerts</a>
-<a href="map.html" class="active">Noise Map</a>
-<a href="reports.html">Reports</a>
-<a href="register_device.html">Register Device</a>
-</nav>
+    <div class="logout">
+      <a href="#">Logout</a>
+    </div>
+  </aside>
 
-<div class="logout">
-<a href="#">Logout</a>
-</div>
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-content">
 
-</aside>
+    <!-- HEADER -->
+    <div class="page-header">
+      <div class="header-left">
+        <h1>Noise Map</h1>
+        <p>Monitor real-time noise activity and device placement</p>
+      </div>
 
-<!-- MAIN -->
-<div class="main-content">
+      <div class="header-right">
+        <span class="status-badge active">🟢 Active</span>
+        <span class="status-badge inactive">🔴 Inactive</span>
+      </div>
+    </div>
 
-<h1 class="page-title">Noise Map</h1>
+    <!-- TOOLBAR -->
+    <div class="map-toolbar modern">
+      <div class="toolbar-right">
 
-<div class="devices-panel">
-<h3>Realtime Classroom Noise Monitoring</h3>
+        <!-- FLOOR SELECT -->
+        <div class="toolbar-group">
+          <label>Floor</label>
+          <select id="floorSelect">
+  <option value="images/floor2.jpg" selected>2nd Floor</option>
+  <option value="images/floor3.jpg">3rd Floor</option>
+  <option value="images/floor4.jpg">4th Floor</option>
+</select>
+        </div>
 
-<div id="noiseMap"></div>
+        <!-- DEVICE SELECT (DYNAMIC LATER) -->
+        <div class="toolbar-group">
+          <label>Device</label>
+          <select id="deviceSelect">
+            <option value="">Select Device</option>
+            <!-- 🔥 DITO ILALAGAY NG JS FROM SUPABASE -->
+          </select>
+        </div>
 
-</div>
+      </div>
 
-</div>
-</div>
+    </div>
 
-<!-- AUDIO POPUP -->
-<div id="audioPopup" class="modal-overlay">
-  <div class="modal-card">
-    <h3 id="deviceLabel">Device</h3>
+    <!-- HINT -->
+    <p class="hint">
+      📍 Click map to place • 🎧 Click node for audio • 🖱 Drag to move
+    </p>
 
-    <button id="playAudio" class="btn-save">▶ Play</button>
-    <button id="stopAudio" class="btn-cancel">■ Stop</button>
+    <!-- MAP CARD (ONLY ONE) -->
+    <div class="chart-box">
+
+      <div id="floorContainer">
+        <!-- DEFAULT = FLOOR 2 -->
+        <img id="floorImage" src="images/floor2.jpg">
+
+      </div>
+
+    </div>
+
   </div>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="js/map.js"></script>
+<!-- POPUP -->
+<div id="audioPopup" class="popup hidden">
+  <div class="popup-card">
+    <h3 id="deviceLabel">Device</h3>
+
+    <div class="popup-actions">
+      <button id="playBtn" class="btn-play">▶ Play</button>
+      <button id="stopBtn" class="btn-stop">■ Stop</button>
+    </div>
+
+    <!-- NOTE: later papalitan natin ito ng JS event -->
+    <button id="closePopupBtn" class="btn-close">Close</button>
+  </div>
+</div>
+
+<div id="selectDevicePopup" class="popup hidden">
+  <div class="popup-card">
+    
+    <h3>Select Device</h3>
+    <p class="popup-sub">Please choose a device before placing a node</p>
+
+    <select id="deviceSelectPopup"></select>
+
+    <div class="popup-actions">
+      <button id="confirmDeviceBtn" class="btn-play">Confirm</button>
+      <button id="cancelDeviceBtn" class="btn-stop">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+
+<script type="module" src="js/map.js"></script>
 
 </body>
 </html>

@@ -6,154 +6,170 @@ const supabase = createClient(
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1emdvdHlnaHFzeWpkanJidXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDAyMzYsImV4cCI6MjA4NTc3NjIzNn0.Dwpc6plq3t_y7PB_B4lejhfOPNkmXULYb3KIkakVsRU"
 );
 
-const logoutBtn = document.getElementById("logoutBtn");
-const logoutModal = document.getElementById("logoutModal");
-const cancelLogout = document.getElementById("cancelLogout");
-const confirmLogout = document.getElementById("confirmLogout");
+let chart;
 
-/* AUTH */
+const deviceFilter = document.getElementById("deviceFilter");
+const rangeFilter = document.getElementById("rangeFilter");
 
-const { data:{ session } } = await supabase.auth.getSession();
-if(!session) location.href="auth.html";
+const avgNoise = document.getElementById("avgNoise");
+const peakNoise = document.getElementById("peakNoise");
+const totalRecords = document.getElementById("totalRecords");
 
-/* LOGOUT */
+/* LOAD DEVICES */
+async function loadDevices(){
+const { data } = await supabase.from("devices").select("device_name");
 
-logoutBtn.onclick=e=>{
-e.preventDefault();
-logoutModal.classList.add("show");
-};
+data.forEach(d=>{
+const opt = document.createElement("option");
+opt.value = d.device_name;
+opt.textContent = d.device_name;
+deviceFilter.appendChild(opt);
+});
+}
 
-cancelLogout.onclick=()=> logoutModal.classList.remove("show");
-
-confirmLogout.onclick=async()=>{
-await supabase.auth.signOut();
-location.href="auth.html";
-};
-
-/* LOAD DATA */
-
+/* LOAD REPORTS */
 async function loadReports(){
 
-const {data,error}=await supabase
+const now = new Date();
+let fromDate;
+
+if(rangeFilter.value==="daily"){
+fromDate = new Date(now - 24*60*60*1000);
+}
+else if(rangeFilter.value==="weekly"){
+fromDate = new Date(now - 7*24*60*60*1000);
+}
+else{
+fromDate = new Date(now - 30*24*60*60*1000);
+}
+
+let query = supabase
 .from("device_readings")
-.select("db, created_at")
-.gte(
-"created_at",
-new Date(Date.now() - 30*24*60*60*1000).toISOString()
-);
+.select("db, created_at, device_name")
+.gte("created_at", fromDate.toISOString())
+.limit(5000);
+
+if(deviceFilter.value !== "all"){
+query = query.eq("device_name", deviceFilter.value);
+}
+
+const { data, error } = await query;
 
 if(error){
-alert("Error loading reports");
+console.log(error);
+alert("Error loading data");
 return;
 }
 
-buildDaily(data);
-buildWeekly(data);
-buildMonthly(data);
+updateSummary(data);
+buildChart(data);
 
 }
 
-/* DAILY */
+/* SUMMARY */
+function updateSummary(data){
 
-function buildDaily(data){
+if(data.length===0){
+avgNoise.innerText="0 dB";
+peakNoise.innerText="0 dB";
+totalRecords.innerText="0";
+return;
+}
 
-let map={};
+const values = data.map(d=>Number(d.db));
+
+const avg = (values.reduce((a,b)=>a+b,0)/values.length).toFixed(2);
+const peak = Math.max(...values).toFixed(2);
+
+avgNoise.innerText = avg+" dB";
+peakNoise.innerText = peak+" dB";
+totalRecords.innerText = data.length;
+
+}
+
+/* GRAPH */
+function buildChart(data){
+
+let map = {};
+const mode = rangeFilter.value;
 
 data.forEach(r=>{
-const d=new Date(r.created_at);
-const key=d.toISOString().split("T")[0];
+const d = new Date(r.created_at);
+
+let key;
+
+if(mode==="daily"){
+key = d.getHours()+":00";
+}
+else if(mode==="weekly"){
+key = d.toLocaleDateString();
+}
+else{
+key = d.getFullYear()+"-"+(d.getMonth()+1);
+}
 
 if(!map[key]) map[key]={sum:0,count:0};
 
-map[key].sum+=Number(r.db);
+map[key].sum += Number(r.db);
 map[key].count++;
 });
 
-const labels=Object.keys(map).slice(-7);
-const values=labels.map(k=>(map[k].sum/map[k].count).toFixed(1));
+/* SORT */
+const labels = Object.keys(map).sort();
+const values = labels.map(k=>(map[k].sum/map[k].count).toFixed(1));
 
-new Chart(dailyChart,{
-type:"line",
+if(chart) chart.destroy();
+
+/* 🎨 BEAUTIFUL GRAPH */
+chart = new Chart(document.getElementById("mainChart"),{
+type: mode==="weekly" ? "bar":"line",
 data:{
 labels,
 datasets:[{
-label:"Avg dB",
+label:"Average dB",
 data:values,
-tension:.3
+borderWidth:3,
+tension:.4,
+pointRadius:4,
+fill:true,
+backgroundColor:"rgba(59,130,246,0.15)",
+borderColor:"#3b82f6"
 }]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{
+display:true,
+labels:{
+color:"#334155",
+font:{size:13}
+}
+}
+},
+scales:{
+x:{
+grid:{display:false}
+},
+y:{
+beginAtZero:true,
+grid:{
+color:"rgba(0,0,0,0.05)"
+}
+}
+}
 }
 });
 
 }
 
-/* WEEKLY */
+/* EVENTS */
+deviceFilter.onchange = loadReports;
+rangeFilter.onchange = loadReports;
 
-function buildWeekly(data){
+/* AUTO REFRESH */
+setInterval(loadReports,10000);
 
-let map={};
-
-data.forEach(r=>{
-const d=new Date(r.created_at);
-
-const first=new Date(d.getFullYear(),0,1);
-const week=Math.ceil((((d-first)/86400000)+first.getDay()+1)/7);
-
-const key="Week "+week;
-
-if(!map[key]) map[key]={sum:0,count:0};
-
-map[key].sum+=Number(r.db);
-map[key].count++;
-});
-
-const labels=Object.keys(map).slice(-6);
-const values=labels.map(k=>(map[k].sum/map[k].count).toFixed(1));
-
-new Chart(weeklyChart,{
-type:"bar",
-data:{
-labels,
-datasets:[{
-label:"Avg dB",
-data:values
-}]
-}
-});
-
-}
-
-/* MONTHLY */
-
-function buildMonthly(data){
-
-let map={};
-
-data.forEach(r=>{
-const d=new Date(r.created_at);
-
-const key=d.getFullYear()+"-"+(d.getMonth()+1);
-
-if(!map[key]) map[key]={sum:0,count:0};
-
-map[key].sum+=Number(r.db);
-map[key].count++;
-});
-
-const labels=Object.keys(map).slice(-6);
-const values=labels.map(k=>(map[k].sum/map[k].count).toFixed(1));
-
-new Chart(monthlyChart,{
-type:"line",
-data:{
-labels,
-datasets:[{
-label:"Avg dB",
-data:values,
-tension:.3
-}]
-}
-});
-
-}
-
+/* INIT */
+loadDevices();
 loadReports();

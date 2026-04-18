@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
   <title>Live Audio</title>
@@ -7,48 +8,116 @@
 
 <h2>🎧 Live Audio Monitor</h2>
 
-<button onclick="startAudio()">▶ Play</button>
-<button onclick="stopAudio()">⏹ Stop</button>
+<button onclick="startAudio()">▶ Play</button> <button onclick="stopAudio()">⏹ Stop</button>
+
+<br><br>
+
+<label>🔊 Volume:</label> <input type="range" id="volume" min="0" max="2" step="0.01" value="1">
 
 <p id="status">Status: Stopped</p>
 
 <script>
 let ws;
 let audioCtx;
-let processor;
+let gainNode;
+let nextTime = 0;
+let reconnectInterval = null;
 
+// ================= START =================
 function startAudio() {
+
+  if (audioCtx) return;
+
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  audioCtx.resume();
 
-  ws = new WebSocket("wss://noise-monitoring-system.onrender.com");
+  // 🔊 volume control
+  gainNode = audioCtx.createGain();
+  gainNode.gain.value = document.getElementById("volume").value;
+  gainNode.connect(audioCtx.destination);
 
-  ws.binaryType = "arraybuffer";
+  nextTime = 0;
 
-  ws.onmessage = (event) => {
-    const input = new Int16Array(event.data);
+  connectWebSocket();
 
-    // convert to Float32
-    const float32 = new Float32Array(input.length);
-    for (let i = 0; i < input.length; i++) {
-      float32[i] = input[i] / 32768;
-    }
-
-    // create audio buffer
-    const buffer = audioCtx.createBuffer(1, float32.length, 16000);
-    buffer.copyToChannel(float32, 0);
-
-    const source = audioCtx.createBufferSource();
-    source.buffer = buffer;
-    source.connect(audioCtx.destination);
-    source.start();
+  // volume live update
+  document.getElementById("volume").oninput = (e) => {
+    if (gainNode) gainNode.gain.value = e.target.value;
   };
 
   document.getElementById("status").innerText = "Playing 🔊";
 }
 
+// ================= CONNECT =================
+function connectWebSocket(){
+
+  ws = new WebSocket("wss://noise-monitoring-system.onrender.com/");
+  ws.binaryType = "arraybuffer";
+
+  ws.onopen = () => {
+    console.log("✅ Connected");
+  };
+
+  ws.onmessage = (event) => {
+
+    const input = new Int16Array(event.data);
+
+    const float32 = new Float32Array(input.length);
+    for (let i = 0; i < input.length; i++) {
+      float32[i] = input[i] / 32768;
+    }
+
+    const buffer = audioCtx.createBuffer(1, float32.length, 16000);
+    buffer.copyToChannel(float32, 0);
+
+    const source = audioCtx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(gainNode);
+
+    // 🔥 smooth playback (queue system)
+    if (nextTime < audioCtx.currentTime) {
+      nextTime = audioCtx.currentTime + 0.05; // small buffer safety
+    }
+
+    source.start(nextTime);
+    nextTime += buffer.duration;
+  };
+
+  ws.onerror = (err) => {
+    console.log("❌ WS ERROR:", err);
+  };
+
+  ws.onclose = () => {
+    console.log("⚠️ Disconnected");
+
+    document.getElementById("status").innerText = "Reconnecting...";
+
+    // 🔥 auto reconnect
+    reconnectInterval = setTimeout(() => {
+      if (audioCtx) connectWebSocket();
+    }, 2000);
+  };
+}
+
+// ================= STOP =================
 function stopAudio() {
-  if (ws) ws.close();
-  if (audioCtx) audioCtx.close();
+
+  if (ws) {
+    ws.close();
+    ws = null;
+  }
+
+  if (reconnectInterval){
+    clearTimeout(reconnectInterval);
+    reconnectInterval = null;
+  }
+
+  if (audioCtx) {
+    audioCtx.close();
+    audioCtx = null;
+  }
+
+  nextTime = 0;
 
   document.getElementById("status").innerText = "Stopped";
 }

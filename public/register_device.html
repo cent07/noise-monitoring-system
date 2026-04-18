@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <title>NoiseSense | Register Device</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/register_device.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ✅ SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 </head>
 
@@ -15,7 +18,6 @@
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-
 <div class="logo">⚡ NoiseSense</div>
 
 <nav class="menu">
@@ -30,39 +32,44 @@
 <div class="logout">
 <a href="#" id="logoutBtn">Logout</a>
 </div>
-
 </aside>
 
 <!-- MAIN -->
 <div class="main-content">
 
+<div class="center-wrapper">
+
 <h1 class="page-title">Register Device</h1>
 
-<div class="devices-panel" style="max-width:500px;">
+<div class="devices-panel">
 
 <h3>Add New Device</h3>
 
-<input id="deviceName" class="alert-search" placeholder="Device name (ex: ESP32_1)">
-<input id="location" class="alert-search" placeholder="Location (ex: CCTE dept)">
+<form id="deviceForm">
 
-<button id="openConfirm" class="btn-save" style="margin-top:10px;">
+<input id="deviceName" placeholder="Device name (ex: ESP32_1)" required>
+<input id="location" placeholder="Location (ex: CCTE Dept)" required>
+
+<button type="submit" class="btn-save">
 Register Device
 </button>
 
-</div>
+</form>
 
 </div>
 
+</div>
+</div>
 </div>
 
 <!-- CONFIRM MODAL -->
 <div id="registerModal" class="modal-overlay">
 <div class="modal-card">
-<h3>Confirm registration</h3>
+<h3>Confirm Registration</h3>
 
 <p>
-Device : <b id="cDevice"></b><br>
-Location : <b id="cLocation"></b>
+Device: <b id="cDevice"></b><br>
+Location: <b id="cLocation"></b>
 </p>
 
 <div class="modal-actions">
@@ -78,9 +85,7 @@ Location : <b id="cLocation"></b>
 <div class="modal-card">
 <h3>Device already exists</h3>
 
-<p>
-<b id="dupDevice"></b> is already registered.
-</p>
+<p><b id="dupDevice"></b> is already registered.</p>
 
 <div class="modal-actions">
 <button class="btn-cancel" id="closeDuplicate">OK</button>
@@ -89,113 +94,36 @@ Location : <b id="cLocation"></b>
 </div>
 </div>
 
-<script type="module">
+<!-- SUCCESS MODAL -->
+<div id="successModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>Success</h3>
 
-import { createClient } from
-"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+    <p>
+      Device <b id="successDevice"></b> has been registered successfully.
+    </p>
 
-const supabase = createClient(
-"https://vuzgotyghqsyjdjrbuwu.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1emdvdHlnaHFzeWpkanJidXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDAyMzYsImV4cCI6MjA4NTc3NjIzNn0.Dwpc6plq3t_y7PB_B4lejhfOPNkmXULYb3KIkakVsRU"
-);
+    <div class="modal-actions">
+      <button class="btn-save" id="closeSuccess">OK</button>
+    </div>
+  </div>
+</div>
 
-/* AUTH */
+<!-- LOGOUT MODAL -->
+<div id="logoutModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>Confirm Logout</h3>
 
-const { data:{ session } } = await supabase.auth.getSession();
-if(!session) location.href="auth.html";
+    <p>Are you sure you want to logout?</p>
 
-/* LOGOUT */
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelLogout">Cancel</button>
+      <button class="btn-danger" id="confirmLogout">Logout</button>
+    </div>
+  </div>
+</div>
 
-document.getElementById("logoutBtn").onclick = async (e)=>{
-e.preventDefault();
-await supabase.auth.signOut();
-location.href="auth.html";
-};
-
-/* ELEMENTS */
-
-const deviceNameInput = document.getElementById("deviceName");
-const locationInput   = document.getElementById("location");
-
-const registerModal  = document.getElementById("registerModal");
-const duplicateModal = document.getElementById("duplicateModal");
-
-const openConfirm    = document.getElementById("openConfirm");
-const cancelRegister = document.getElementById("cancelRegister");
-const confirmRegister= document.getElementById("confirmRegister");
-
-const cDevice   = document.getElementById("cDevice");
-const cLocation = document.getElementById("cLocation");
-
-const dupDevice = document.getElementById("dupDevice");
-const closeDuplicate = document.getElementById("closeDuplicate");
-
-/* OPEN CONFIRM */
-
-openConfirm.onclick = ()=>{
-
-const name = deviceNameInput.value.trim();
-const loc  = locationInput.value.trim();
-
-if(!name || !loc){
-alert("Please complete all fields.");
-return;
-}
-
-cDevice.textContent   = name;
-cLocation.textContent = loc;
-
-registerModal.classList.add("show");
-};
-
-cancelRegister.onclick = ()=>{
-registerModal.classList.remove("show");
-};
-
-closeDuplicate.onclick = ()=>{
-duplicateModal.classList.remove("show");
-};
-
-/* REGISTER */
-
-confirmRegister.onclick = async ()=>{
-
-registerModal.classList.remove("show");
-
-const name = deviceNameInput.value.trim();
-const loc  = locationInput.value.trim();
-
-const { data:existing } = await supabase
-.from("devices")
-.select("id")
-.eq("device_name",name)
-.maybeSingle();
-
-if(existing){
-dupDevice.textContent = name;
-duplicateModal.classList.add("show");
-return;
-}
-
-const { error } = await supabase
-.from("devices")
-.insert({
-device_name:name,
-location:loc
-});
-
-if(error){
-alert(error.message);
-return;
-}
-
-setTimeout(()=>{
-location.href="index.html";
-},600);
-
-};
-
-</script>
+<script type="module" src="js/register_device.js"></script>
 
 </body>
 </html>

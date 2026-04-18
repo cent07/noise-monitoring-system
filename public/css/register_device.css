@@ -1,0 +1,214 @@
+/* ===== BASE ===== */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:#f1f5f9;
+color:#0f172a;
+}
+
+/* ===== LAYOUT ===== */
+.app-layout{
+display:flex;
+min-height:100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+width:240px;
+height:100vh;
+position:fixed;
+top:0;
+left:0;
+
+background:#0f172a;
+color:white;
+padding:28px 20px;
+
+display:flex;
+flex-direction:column;
+}
+
+.logo{
+font-size:18px;
+font-weight:700;
+margin-bottom:35px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.menu{
+display:flex;
+flex-direction:column;
+gap:10px;
+flex:1;
+}
+
+.menu a{
+color:#94a3b8;
+text-decoration:none;
+padding:12px 14px;
+border-radius:8px;
+font-size:14px;
+font-weight:500;
+transition:0.2s;
+}
+
+.menu a:hover{
+background:#1e293b;
+color:white;
+}
+
+.menu a.active{
+background:#1e293b;
+color:white;
+}
+
+.logout{
+position:absolute;
+bottom:20px;
+left:20px;
+right:20px;
+}
+
+.logout a{
+color:#94a3b8;
+text-decoration:none;
+font-size:14px;
+}
+
+/* ===== MAIN ===== */
+.main-content{
+margin-left:240px;
+padding:30px 40px;
+width:calc(100% - 240px);
+}
+
+.page-title{
+font-size:28px;
+font-weight:700;
+margin-bottom:25px;
+}
+
+/* ===== PANEL ===== */
+.devices-panel{
+background:white;
+padding:22px;
+border-radius:12px;
+box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+
+.devices-panel h3{
+margin-bottom:15px;
+font-weight:600;
+}
+
+/* ===== INPUTS ===== */
+input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:1px solid #e2e8f0;
+margin-bottom:12px;
+font-size:14px;
+}
+
+/* ===== BUTTONS ===== */
+.btn-save{
+background:#22c55e;
+color:white;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+width:100%;
+}
+
+.btn-cancel{
+background:#ef4444;
+color:white;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+display:none;
+justify-content:center;
+align-items:center;
+background:rgba(0,0,0,0.6);
+z-index:9999;
+}
+
+.modal-overlay.show{
+display:flex;
+}
+
+.modal-card{
+background:white;
+padding:25px;
+border-radius:14px;
+width:320px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+.modal-card h3{
+margin-bottom:8px;
+font-size:20px;
+font-weight:600;
+}
+
+.modal-card p{
+color:#64748b;
+font-size:14px;
+margin-bottom:18px;
+}
+
+.modal-actions{
+display:flex;
+gap:12px;
+margin-top:18px;
+}
+
+.modal-actions button{
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+}
+/* ===== DANGER BUTTON ===== */
+.btn-danger{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* ===== FIX CURSOR LINE ISSUE ===== */
+html, body{
+caret-color: transparent;
+}
+
+input{
+caret-color: black;
+}

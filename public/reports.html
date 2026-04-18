@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <title>NoiseSense | Reports</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/reports.css">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -15,7 +18,6 @@
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-
 <div class="logo">⚡ NoiseSense</div>
 
 <nav class="menu">
@@ -28,9 +30,8 @@
 </nav>
 
 <div class="logout">
-<a href="#" id="logoutBtn">Logout</a>
+<a href="#">Logout</a>
 </div>
-
 </aside>
 
 <!-- MAIN -->
@@ -40,31 +41,48 @@
 
 <div class="devices-panel">
 
-<!-- ⭐ REACT REPORTS WILL MOUNT HERE -->
-<div id="reportsRoot"></div>
+<!-- FILTER -->
+<div class="report-controls">
+<select id="deviceFilter" class="report-select">
+<option value="all">All Devices</option>
+</select>
 
+<select id="rangeFilter" class="report-select">
+<option value="daily">Daily</option>
+<option value="weekly">Weekly</option>
+<option value="monthly">Monthly</option>
+</select>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary-grid">
+<div class="summary-card">
+<h4>Average Noise</h4>
+<h2 id="avgNoise">--</h2>
+</div>
+
+<div class="summary-card">
+<h4>Peak Noise</h4>
+<h2 id="peakNoise">--</h2>
+</div>
+
+<div class="summary-card">
+<h4>Total Records</h4>
+<h2 id="totalRecords">--</h2>
+</div>
+</div>
+
+<!-- GRAPH -->
+<div class="chart-box">
+<h3 class="section-title">Noise Analytics</h3>
+<canvas id="mainChart"></canvas>
 </div>
 
 </div>
-
-</div>
-
-<!-- LOGOUT MODAL -->
-<div id="logoutModal" class="modal-overlay">
-<div class="modal-card">
-<h3>Confirm Logout</h3>
-<p>Are you sure you want to logout?</p>
-
-<div class="modal-actions">
-<button class="btn-cancel" id="cancelLogout">Cancel</button>
-<button class="btn-confirm" id="confirmLogout">Logout</button>
-</div>
-
 </div>
 </div>
 
-<!-- ⭐ LOAD REACT REPORTS BUILD -->
-<script type="module" src="reactReports/assets/index-BGWZgs3K.js"></script>
+<script type="module" src="js/reports.js"></script>
 
 </body>
 </html>

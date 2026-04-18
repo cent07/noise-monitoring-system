@@ -1,11 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Reports from './Reports.jsx'
+import App from './App.jsx'
 
-ReactDOM.createRoot(
-document.getElementById('reportsRoot')
-).render(
-<React.StrictMode>
-<Reports />
-</React.StrictMode>
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
 )

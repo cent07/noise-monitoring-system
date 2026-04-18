@@ -1,0 +1,313 @@
+/* ===== BASE ===== */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:#f1f5f9;
+color:#0f172a;
+}
+
+/* ===== LAYOUT ===== */
+.app-layout{
+display:flex;
+min-height:100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:240px;
+  height:100vh;
+  position:fixed;
+  top:0;
+  left:0;
+
+  background:#0f172a;
+  color:white;
+  padding:28px 20px;
+
+  display:flex;
+  flex-direction:column;
+
+  position:fixed;
+}
+
+.logo{
+font-size:18px;
+font-weight:700;
+margin-bottom:35px;
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.menu{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+
+  overflow-y:auto;  
+  flex:1;         
+  padding-bottom:60px;
+}
+
+.menu a{
+color:#94a3b8;
+text-decoration:none;
+padding:12px 14px;
+border-radius:8px;
+font-size:14px;
+font-weight:500;
+transition:0.2s;
+}
+
+.menu a:hover{
+background:#1e293b;
+color:white;
+}
+
+.menu a.active{
+background:#1e293b;
+color:white;
+}
+
+.logout{
+position:absolute;
+bottom:20px;
+left:20px;
+right:20px;
+}
+
+.logout a{
+color:#94a3b8;
+text-decoration:none;
+font-size:14px;
+}
+
+/* ===== MAIN ===== */
+.main-content{
+  margin-left:240px;
+  padding:30px 40px;
+  width:calc(100% - 240px); /* 🔥 IMPORTANT */
+}
+
+.page-title{
+font-size:28px;
+font-weight:700;
+margin-bottom:25px;
+}
+
+/* ===== DASHBOARD CARDS ===== */
+.dashboard{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+margin-bottom:25px;
+}
+
+.card{
+background:white;
+padding:22px;
+border-radius:12px;
+box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+
+.card h3{
+font-size:14px;
+color:#64748b;
+font-weight:500;
+margin-bottom:5px;
+}
+
+.card p{
+font-size:26px;
+font-weight:700;
+}
+
+/* ===== SECTION ===== */
+.section-title{
+margin:25px 0 12px 0;
+font-size:22px;
+font-weight:600;
+color:#0f172a;
+}
+
+/* ===== CHART ===== */
+.chart-box{
+background:white;
+padding:20px;
+border-radius:12px;
+margin-bottom:25px;
+box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+
+/* ===== DEVICES ===== */
+.devices-panel{
+background:white;
+padding:22px;
+border-radius:12px;
+box-shadow:0 2px 12px rgba(0,0,0,0.05);
+}
+
+.devices-panel h3{
+margin-bottom:15px;
+font-weight:600;
+}
+
+.devices-table{
+width:100%;
+border-collapse:collapse;
+font-size:14px;
+}
+
+.devices-table th{
+text-align:left;
+color:#64748b;
+font-weight:600;
+padding-bottom:10px;
+}
+
+.devices-table td{
+padding:12px 0;
+border-top:1px solid #e2e8f0;
+}
+
+.devices-table tr:hover{
+background:#f8fafc;
+}
+
+.devices-table tr.selected{
+background:#e0e7ff;
+}
+
+/* ===== BUTTONS ===== */
+.btn-action{
+padding:6px 12px;
+border-radius:6px;
+border:none;
+font-size:12px;
+font-weight:600;
+cursor:pointer;
+}
+
+.btn-edit{
+background:#3b82f6;
+color:white;
+}
+
+.btn-delete{
+background:#ef4444;
+color:white;
+}
+/* ===== MODAL OVERLAY ===== */
+/* ===== MODAL (THRESHOLD STYLE) ===== */
+.modal-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+display:none;
+justify-content:center;
+align-items:center;
+background:rgba(0,0,0,0.6);
+z-index:9999;
+}
+
+.modal-overlay.show{
+display:flex;
+}
+
+.modal-card{
+background:white;
+padding:25px;
+border-radius:14px;
+width:320px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* ACTIVE STATE */
+.modal-overlay.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* ===== TEXT ===== */
+.modal-card h3{
+  margin-bottom:8px;
+  font-size:20px;
+  font-weight:600;
+}
+
+.modal-card p{
+  color:#64748b;
+  font-size:14px;
+  margin-bottom:18px;
+}
+
+/* ===== INPUT ===== */
+.modal-card input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #e2e8f0;
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.modal-actions{
+display:flex;
+gap:12px;
+margin-top:18px;
+}
+.modal-actions button{
+flex:1;
+padding:10px;
+border:none;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+}
+/* CANCEL */
+.btn-cancel{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* SAVE */
+.btn-save{
+  background:#22c55e;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* DELETE */
+.btn-confirm{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+html, body{
+  caret-color: transparent;
+}
+input, textarea{
+  caret-color: black;
+}

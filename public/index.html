@@ -5,7 +5,7 @@
 <title>NoiseSense | Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/dashboard.css">
 </head>
 
 <body>
@@ -69,46 +69,12 @@
 </div>
 
 
-<!-- MODALS SAME -->
-<div id="deleteModal" class="modal-overlay">
-<div class="modal-card">
-<h3>Delete Device</h3>
-<p>Delete <b id="deleteDeviceName"></b> ?</p>
-<div class="modal-actions">
-<button class="btn-cancel" id="cancelDelete">Cancel</button>
-<button class="btn-confirm" id="confirmDelete">Delete</button>
-</div>
-</div>
-</div>
-
-<div id="editModal" class="modal-overlay"> 
-<div class="modal-card">
-<h3>Edit Location</h3>
-<p id="editDeviceLabel"></p>
-<input id="editLocationInput" placeholder="New location">
-<div class="modal-actions">
-<button class="btn-cancel" id="cancelEdit">Cancel</button>
-<button class="btn-save" id="confirmEdit">Save</button>
-</div>
-</div>
-</div>
-
-<div id="logoutModal" class="modal-overlay">
-<div class="modal-card">
-<h3>Confirm Logout</h3>
-<p>Are you sure you want to logout?</p>
-<div class="modal-actions">
-<button class="btn-cancel" id="cancelLogout">Cancel</button>
-<button class="btn-confirm" id="confirmLogout">Logout</button>
-</div>
-</div>
-</div>
-
 <!-- DELETE MODAL -->
 <div id="deleteModal" class="modal-overlay">
   <div class="modal-card">
     <h3>Delete Device</h3>
-    <p>Delete <b id="deleteDeviceName"></b> ?</p>
+    <p>Delete <b id="deleteDeviceName"></b>?</p>
+
     <div class="modal-actions">
       <button class="btn-cancel" id="cancelDelete">Cancel</button>
       <button class="btn-confirm" id="confirmDelete">Delete</button>
@@ -120,8 +86,9 @@
 <div id="editModal" class="modal-overlay">
   <div class="modal-card">
     <h3>Edit Device</h3>
+    <p id="editDeviceLabel"></p>
 
-    <input id="editLocation" placeholder="New Location">
+    <input id="editLocationInput" placeholder="New location">
 
     <div class="modal-actions">
       <button class="btn-cancel" id="cancelEdit">Cancel</button>
@@ -130,8 +97,21 @@
   </div>
 </div>
 
+<!-- LOGOUT MODAL -->
+<div id="logoutModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to logout?</p>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelLogout">Cancel</button>
+      <button class="btn-confirm" id="confirmLogout">Logout</button>
+    </div>
+  </div>
+</div>
+
 <!-- REACT -->
-<script type="module" src="reactGraph/assets/index-CLr9dWDa.js"></script>
+<script type="module" src="reactGraph/assets/index-C4y6rX97.js"></script>
 
 <!-- DASHBOARD -->
 <script type="module" src="js/dashboard.js"></script>

@@ -16,16 +16,22 @@ const [status,setStatus]=useState("OFFLINE");
 const [device,setDevice]=useState("-");
 const [location,setLocation]=useState("-");
 
+// ✅ NEW: dynamic thresholds
+const [thresholds, setThresholds] = useState({
+  normal: 50,
+  moderate: 70,
+  critical: 90
+});
+
 useEffect(()=>{
 
 window.updateNoiseGraph=(noise,isHistory=false)=>{
 
 const time=new Date().toLocaleTimeString();
 
-setData(prev=>{
-let updated=[...prev,{noise:Number(noise),time}];
-if(updated.length>30) updated.shift();
-return updated;
+setData(prev => {
+  const updated = prev.slice(-29);
+  return [...updated, { noise: Number(noise), time }];
 });
 
 };
@@ -38,9 +44,20 @@ setDevice(d || "-");
 setLocation(loc || "-");
 };
 
+// ✅ RECEIVE thresholds from dashboard.js
+window.setThresholds = (t) => {
+  setThresholds(t);
+};
+
 },[]);
 
 const latestNoise=data.length?data[data.length-1].noise:0;
+
+// ✅ COLOR LOGIC (DYNAMIC)
+const color =
+latestNoise <= thresholds.normal ? "#22c55e" :
+latestNoise <= thresholds.moderate ? "#f59e0b" :
+"#ef4444";
 
 return(
 
@@ -68,7 +85,11 @@ justifyContent:"space-between"
 
 <h4 style={{opacity:.7}}>LIVE NOISE</h4>
 
-<h1 style={{fontSize:"64px",margin:"10px 0"}}>
+<h1 style={{
+fontSize:"64px",
+margin:"10px 0",
+color: color // ✅ dynamic text color
+}}>
 {latestNoise?latestNoise.toFixed(1):"--"}
 </h1>
 
@@ -83,10 +104,7 @@ marginTop:"14px"
 <div style={{
 width:`${Math.min(latestNoise,100)}%`,
 height:"100%",
-background:
-latestNoise<60?"#22c55e":
-latestNoise<80?"#f59e0b":
-"#ef4444",
+background: color, // ✅ dynamic bar color
 transition:"0.4s"
 }}/>
 </div>
@@ -126,12 +144,12 @@ Realtime Monitoring
 <div style={{
 background:"#ffffff",
 borderRadius:"14px",
-padding:"14px",
+padding:"0px",
 boxShadow:"0 10px 30px rgba(0,0,0,0.05)"
 }}>
 
 <ResponsiveContainer width="100%" height={340}>
-<AreaChart data={data} margin={{top:10,right:20,left:-10,bottom:0}}>
+<AreaChart data={data} margin={{top:10,right:0,left:0,bottom:0}}>
 
 <defs>
 <linearGradient id="noiseFill" x1="0" y1="0" x2="0" y2="1">
@@ -142,15 +160,26 @@ boxShadow:"0 10px 30px rgba(0,0,0,0.05)"
 
 <CartesianGrid strokeDasharray="4 4" stroke="#e5e7eb" vertical={false}/>
 
-<XAxis dataKey="time" tick={{fill:"#64748b",fontSize:12}} axisLine={false} tickLine={false}/>
+<XAxis 
+  dataKey="time"
+  interval="preserveStartEnd"
+  minTickGap={20}
+  tick={{fill:"#64748b",fontSize:12}}
+  axisLine={false}
+  tickLine={false}
+/>
 
 <YAxis domain={[20,120]} tick={{fill:"#64748b",fontSize:12}} axisLine={false} tickLine={false}/>
 
-<Tooltip contentStyle={{
-borderRadius:"10px",
-border:"none",
-boxShadow:"0 10px 25px rgba(0,0,0,0.08)"
-}}/>
+<Tooltip 
+  formatter={(value) => [`${value} dB`, "Noise"]}
+  labelFormatter={(label) => `Time: ${label}`}
+  contentStyle={{
+    borderRadius:"10px",
+    border:"none",
+    boxShadow:"0 10px 25px rgba(0,0,0,0.08)"
+  }}
+/>
 
 <Area
 type="monotone"
@@ -159,7 +188,8 @@ stroke="#6366f1"
 strokeWidth={3}
 fill="url(#noiseFill)"
 dot={false}
-isAnimationActive={true}
+isAnimationActive={false}
+connectNulls={true}
 />
 
 </AreaChart>
