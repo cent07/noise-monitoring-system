@@ -2,47 +2,53 @@ const express = require("express");
 const WebSocket = require("ws");
 
 const app = express();
-app.use(express.json());
-
 const PORT = process.env.PORT || 10000;
 
 const server = app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
 
-const wss = new WebSocket.Server({ 
-  server,
-  path: "/"
-});
+// 🔥 store clients per device
+const devices = {};
 
-// 🔥 STORE ALL CLIENTS
-const clients = new Set();
+const wss = new WebSocket.Server({ server, path: "/" });
 
-wss.on("connection", (ws) => {
-  console.log("Client Connected");
+wss.on("connection", (ws, req) => {
 
-  clients.add(ws);
+  // 👉 detect device from query
+  const url = new URL(req.url, "http://localhost");
+  const device = url.searchParams.get("device");
+
+  console.log("Connected:", device || "UNKNOWN");
+
+  if (device) {
+    if (!devices[device]) {
+      devices[device] = new Set();
+    }
+    devices[device].add(ws);
+  }
 
   ws.on("message", (data) => {
-    console.log("Audio chunk received:", data.length);
 
-    // ✅ BROADCAST SA LAHAT (INCLUDING BROWSER)
-    clients.forEach(client => {
+    // 👉 send ONLY to same device
+    if (!device || !devices[device]) return;
+
+    devices[device].forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data);
       }
     });
   });
 
-  const interval = setInterval(() => {
-    if (ws.readyState === WebSocket.OPEN) {
-      ws.ping();
-    }
-  }, 30000);
-
   ws.on("close", () => {
-    clients.delete(ws);
-    clearInterval(interval);
-    console.log("Client Disconnected");
+    if (device && devices[device]) {
+      devices[device].delete(ws);
+
+      if (devices[device].size === 0) {
+        delete devices[device];
+      }
+    }
+
+    console.log("Disconnected:", device);
   });
-}); 
+});

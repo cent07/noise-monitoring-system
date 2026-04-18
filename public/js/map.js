@@ -31,6 +31,7 @@ const playBtn = document.getElementById("playBtn");
 const stopBtn = document.getElementById("stopBtn");
 const closePopupBtn = document.getElementById("closePopupBtn");
 
+
 let currentDevice = null;
 let isDragging = false;
 stopBtn.style.display = "none";
@@ -62,31 +63,21 @@ function startLiveAudio(){
 
   nextTime = 0;
 
-  connectWebSocket(currentDevice);
+  connectWebSocket();
 }
 
-function connectWebSocket(deviceName){
+function connectWebSocket(){
 
-  ws = new WebSocket("wss://noise-monitoring-system.onrender.com/ws/" + deviceName);
+  ws = new WebSocket("wss://noise-monitoring-system.onrender.com/");
+  ws.binaryType = "arraybuffer";
 
   ws.onopen = () => {
-    console.log("✅ Connected to:", deviceName);
+    console.log("✅ Connected to audio");
   };
 
   ws.onmessage = (event) => {
 
-    const base64 = event.data;
-
-    // 🔥 decode base64 → binary
-    const binary = atob(base64);
-    const len = binary.length;
-    const bytes = new Uint8Array(len);
-
-    for (let i = 0; i < len; i++) {
-      bytes[i] = binary.charCodeAt(i);
-    }
-
-    const input = new Int16Array(bytes.buffer);
+    const input = new Int16Array(event.data);
 
     const float32 = new Float32Array(input.length);
     for (let i = 0; i < input.length; i++) {
@@ -109,7 +100,10 @@ function connectWebSocket(deviceName){
   };
 
   ws.onclose = () => {
-    console.log("⚠️ Disconnected:", deviceName);
+    console.log("⚠️ Reconnecting...");
+    reconnectInterval = setTimeout(() => {
+      if (audioCtx) connectWebSocket();
+    }, 2000);
   };
 }
 
@@ -154,17 +148,11 @@ cancelBtn.addEventListener("click", () => {
 });
 playBtn.addEventListener("click", () => {
 
-  if(!currentDevice){
-    alert("Select a device first");
-    return;
-  }
-
   startLiveAudio();
 
   playBtn.style.display = "none";
   stopBtn.style.display = "block";
 });
-
 
 stopBtn.addEventListener("click", () => {
 
