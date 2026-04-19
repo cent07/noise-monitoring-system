@@ -2,7 +2,7 @@ const express = require("express");
 const WebSocket = require("ws");
 
 const audioBuffers = {};
-const MAX_CHUNKS = 80; // ~5 seconds (depende sa rate mo)
+const MAX_CHUNKS = 250; // ~5 seconds (depende sa rate mo)
 const app = express();
 const PORT = process.env.PORT || 10000;
 
@@ -16,7 +16,11 @@ const devices = {};
 const wss = new WebSocket.Server({ server, path: "/" });
 
 wss.on("connection", (ws, request) => {
+  ws.isAlive = true;
 
+  ws.on("pong", () => {
+    ws.isAlive = true;
+  });
   // ✅ GET DEVICE FROM URL
   const url = new URL(request.url, "http://localhost");
   const device = url.searchParams.get("device") || "unknown";
