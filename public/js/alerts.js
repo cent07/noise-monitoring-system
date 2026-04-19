@@ -44,12 +44,19 @@ const playBtn = document.getElementById("playAudio");
 const audioPlayer = document.getElementById("audioPlayer");
 
 let masterData = [];
+let currentAudioFile = null;
 
 playBtn.onclick = () => {
 
-  // 🔥 SAMPLE muna (later papalitan natin ng real recording)
-  audioPlayer.src = "https://www.soundjay.com/button/beep-07.wav";
+  if(!currentAudioFile){
+    alert("No audio found");
+    return;
+  }
 
+  const url =
+  `https://vuzgotyghqsyjdjrbuwu.supabase.co/storage/v1/object/public/alert-audio/${currentAudioFile}`;
+
+  audioPlayer.src = url;
   audioPlayer.play();
 
 };
@@ -198,14 +205,17 @@ ${time.toLocaleTimeString()}
 
 card.onclick = ()=>{
 
-mTitle.innerText =
-`${a.device_name} — ${Number(a.db).toFixed(1)} dB`;
+  mTitle.innerText =
+  `${a.device_name} — ${Number(a.db).toFixed(1)} dB`;
 
-mLocation.innerText = a.location || "-";
-mStatus.innerText = "CRITICAL";
-mTime.innerText = time.toLocaleString();
+  mLocation.innerText = a.location || "-";
+  mStatus.innerText = "CRITICAL";
+  mTime.innerText = time.toLocaleString();
 
-alertModal.classList.add("show");
+  // 🔥 IMPORTANT: SAVE FILE NAME
+  currentAudioFile = `${a.device_name}_${a.id}.wav`;
+
+  alertModal.classList.add("show");
 
 };
 
