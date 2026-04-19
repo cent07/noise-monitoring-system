@@ -72,6 +72,8 @@ const supabase = createClient(
 
 async function saveWav(device, alertId) {
 
+  const chunks = audioBuffers[device];
+
  if (!chunks || chunks.length < 10) {
   console.log("❌ Not enough audio data");
   return;
