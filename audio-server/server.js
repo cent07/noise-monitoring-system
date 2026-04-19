@@ -157,3 +157,10 @@ setInterval(async () => {
   }
 
 }, 2000);
+setInterval(() => {
+  wss.clients.forEach(ws => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.ping();
+    }
+  });
+}, 30000);
