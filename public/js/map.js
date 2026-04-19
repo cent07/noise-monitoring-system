@@ -68,36 +68,38 @@ function startLiveAudio(){
 
 function connectWebSocket(){
 
-  ws = new WebSocket("wss://noise-monitoring-system.onrender.com/");
+  ws = new WebSocket(`wss://noise-monitoring-system.onrender.com/?device=${currentDevice}`);
   ws.binaryType = "arraybuffer";
 
   ws.onopen = () => {
-    console.log("✅ Connected to audio");
+    console.log("✅ Connected to audio:", currentDevice);
   };
 
   ws.onmessage = (event) => {
 
-    const input = new Int16Array(event.data);
+  if (!audioCtx) return; // 🔥 IMPORTANT FIX
 
-    const float32 = new Float32Array(input.length);
-    for (let i = 0; i < input.length; i++) {
-      float32[i] = input[i] / 32768;
-    }
+  const input = new Int16Array(event.data);
 
-    const buffer = audioCtx.createBuffer(1, float32.length, 16000);
-    buffer.copyToChannel(float32, 0);
+  const float32 = new Float32Array(input.length);
+  for (let i = 0; i < input.length; i++) {
+    float32[i] = input[i] / 32768;
+  }
 
-    const source = audioCtx.createBufferSource();
-    source.buffer = buffer;
-    source.connect(gainNode);
+  const buffer = audioCtx.createBuffer(1, float32.length, 16000);
+  buffer.copyToChannel(float32, 0);
 
-    if (nextTime < audioCtx.currentTime) {
-      nextTime = audioCtx.currentTime + 0.05;
-    }
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer;
+  source.connect(gainNode);
 
-    source.start(nextTime);
-    nextTime += buffer.duration;
-  };
+  if (nextTime < audioCtx.currentTime) {
+    nextTime = audioCtx.currentTime; // 🔥 REMOVE DELAY OFFSET
+  }
+
+  source.start(nextTime);
+  nextTime += buffer.duration;
+};
 
   ws.onclose = () => {
     console.log("⚠️ Reconnecting...");

@@ -279,4 +279,16 @@ html, body{
 }
 input, textarea{
   caret-color: black;
+}.btn-play{
+background:#2563eb;
+color:white;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+cursor:pointer;
+margin-right:10px;
+}
+
+.btn-play:hover{
+background:#1d4ed8;
 }

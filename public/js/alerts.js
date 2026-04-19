@@ -40,11 +40,27 @@ const mLocation = document.getElementById("mLocation");
 const mStatus = document.getElementById("mStatus");
 const mTime = document.getElementById("mTime");
 
+const playBtn = document.getElementById("playAudio");
+const audioPlayer = document.getElementById("audioPlayer");
+
 let masterData = [];
+
+playBtn.onclick = () => {
+
+  // 🔥 SAMPLE muna (later papalitan natin ng real recording)
+  audioPlayer.src = "https://www.soundjay.com/button/beep-07.wav";
+
+  audioPlayer.play();
+
+};
 
 /* CLOSE ALERT MODAL */
 
-closeModal.onclick = ()=> alertModal.classList.remove("show");
+closeModal.onclick = ()=>{
+  alertModal.classList.remove("show");
+  audioPlayer.pause();
+  audioPlayer.currentTime = 0;
+};
 
 alertModal.onclick = (e)=>{
 if(e.target === alertModal){
