@@ -240,7 +240,7 @@ cursor:pointer;
 }
 
 .btn-cancel{
-background:#ef4444;
+background:#0F172A;
 color:white;
 }
 
@@ -301,4 +301,14 @@ html, body{
 }
 input, textarea{
   caret-color: black;
+}
+
+.logo{
+  user-select: none;
+  cursor: default;
+}
+
+.logo:focus,
+.logo:active{
+  outline: none;
 }

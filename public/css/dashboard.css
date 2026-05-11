@@ -275,7 +275,7 @@ cursor:pointer;
 }
 /* CANCEL */
 .btn-cancel{
-  background:#ef4444;
+  background:#0F172A;
   color:white;
   border:none;
   padding:10px 16px;
@@ -310,4 +310,14 @@ html, body{
 }
 input, textarea{
   caret-color: black;
+}
+
+.logo{
+  user-select: none;
+  cursor: default;
+}
+
+.logo:focus,
+.logo:active{
+  outline: none;
 }

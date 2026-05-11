@@ -498,4 +498,7 @@ body {
 input, textarea {
   caret-color: auto;
 }
-
+#playBtn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}

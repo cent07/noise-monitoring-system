@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NoiseSense | User Management</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<div class="logo" onclick="location.href='index.html'">🔊 Tahimik Hero</div>
+
+<nav class="menu">
+<a href="index.html">Dashboard</a>
+<a href="threshold.html">Threshold Rules</a>
+<a href="alerts.html">Alerts</a>
+<a href="map.html">Noise Map</a>
+<a href="reports.html">Reports</a>
+<a href="register_device.html">Register Device</a>
+<a href="users.html" class="active">User Management</a>
+</nav>
+
+<div class="logout">
+<a href="#" id="logoutBtn">Logout</a>
+</div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+
+<h1 class="page-title">User Management</h1>
+
+<!-- SUMMARY -->
+<div class="dashboard">
+
+<div class="card">
+<h3>Total Users</h3>
+<p id="totalUsers">0</p>
+</div>
+
+<div class="card">
+<h3>Active Accounts</h3>
+<p id="activeUsers">0</p>
+</div>
+
+<div class="card">
+<h3>Authentication</h3>
+<p>Email</p>
+</div>
+
+</div>
+
+<h2 class="section-title">Registered Administrator Accounts</h2>
+
+<div class="devices-panel">
+
+<div style="display:flex; gap:15px; margin-bottom:20px;">
+<input
+id="searchUser"
+placeholder="Search email..."
+style="flex:1; padding:12px; border:1px solid #e2e8f0; border-radius:8px;"
+>
+
+<button id="openAddUser" class="btn-action btn-edit">
++ Add User
+</button>
+</div>
+
+<table class="devices-table">
+<thead>
+<tr>
+<th>Email</th>
+<th>User ID</th>
+<th>Status</th>
+<th style="width:180px;">Action</th>
+</tr>
+</thead>
+
+<tbody id="usersBody"></tbody>
+</table>
+
+</div>
+
+</div>
+</div>
+
+<!-- ADD USER MODAL -->
+<div id="userModal" class="modal-overlay">
+<div class="modal-card">
+
+<h3>Add User</h3>
+<p>Create administrator account</p>
+
+<input type="email" id="userEmail" placeholder="Email Address">
+<input type="password" id="userPassword" placeholder="Password">
+
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelAddUser">Cancel</button>
+<button class="btn-save" id="confirmAddUser">Create</button>
+</div>
+
+</div>
+</div>
+
+<!-- LOGOUT MODAL -->
+<div id="logoutModal" class="modal-overlay">
+<div class="modal-card">
+<h3>Confirm Logout</h3>
+<p>Are you sure you want to logout?</p>
+
+<div class="modal-actions">
+<button class="btn-cancel" id="cancelLogout">Cancel</button>
+<button class="btn-confirm" id="confirmLogout">Logout</button>
+</div>
+</div>
+</div>
+
+<script type="module" src="js/users.js"></script>
+
+</body>
+</html>

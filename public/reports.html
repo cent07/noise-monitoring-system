@@ -5,11 +5,7 @@
 <title>NoiseSense | Reports</title>
 
 <link rel="stylesheet" href="css/reports.css">
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body>
@@ -18,7 +14,7 @@
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-<div class="logo">⚡ NoiseSense</div>
+<div class="logo" onclick="location.href='index.html'">🔊 Tahimik Hero</div>
 
 <nav class="menu">
 <a href="index.html">Dashboard</a>
@@ -27,10 +23,11 @@
 <a href="map.html">Noise Map</a>
 <a href="reports.html" class="active">Reports</a>
 <a href="register_device.html">Register Device</a>
+<a href="users.html">User Management</a>
 </nav>
 
 <div class="logout">
-<a href="#">Logout</a>
+  <a href="#" id="logoutBtn">Logout</a>
 </div>
 </aside>
 
@@ -75,13 +72,38 @@
 <!-- GRAPH -->
 <div class="chart-box">
 <h3 class="section-title">Noise Analytics</h3>
-<canvas id="mainChart"></canvas>
+
+<div id="loadingState" class="state-box">Loading data...</div>
+
+<div id="emptyState" class="state-box" style="display:none;">
+No data available
+</div>
+
+<!-- 🔥 REACT ROOT -->
+<div id="react-root" style="width:100%; height:360px;"></div>
+
 </div>
 
 </div>
 </div>
 </div>
+<!-- LOGOUT MODAL -->
+<div id="logoutModal" class="modal-overlay">
+  <div class="modal-card">
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to logout?</p>
 
+    <div class="modal-actions">
+      <button class="btn-cancel" id="cancelLogout">Cancel</button>
+      <button class="btn-confirm" id="confirmLogout">Logout</button>
+    </div>
+  </div>
+</div>
+
+<!-- 🔥 REACT BUILD -->
+<script type="module" src="dist/assets/index-D3FHG1Hl.js"></script>
+
+<!-- 🔥 LOGIC -->
 <script type="module" src="js/reports.js"></script>
 
 </body>

@@ -285,7 +285,16 @@ html, body{
   caret-color: transparent;
 }
 input, textarea{
-  caret-color: black;
+  caret-color: #22d3ee; /* cyan - same theme mo */
+}
+
+input:focus{
+  border:1px solid #22d3ee;
+  box-shadow:0 0 0 2px rgba(34,211,238,0.2);
+}
+
+input{
+  color:#e2e8f0;
 }
 
 /* REMOVE DEFAULT PASSWORD ICON */
@@ -296,6 +305,9 @@ input[type="password"]::-ms-clear {
 input[type="password"]::-webkit-credentials-auto-fill-button,
 input[type="password"]::-webkit-textfield-decoration-container {
   display: none !important;
+}button:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
 }
 </style>
 </head>
@@ -311,7 +323,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 <div class="auth-wrapper">
 
 <div class="auth-header">
-<h1>🔊 NoiseSense</h1>
+<h1>🔊Tahimik Hero</h1>
 <p>Smart Noise Monitoring System</p>
 <div class="sound-wave">
 <span></span><span></span><span></span><span></span><span></span>
@@ -378,26 +390,57 @@ window.togglePass = (id, el)=>{
   }
 };
 
-window.login=async()=>{
-  const btn=loginBtn;
-  btn.classList.add("loading");
+window.login = async () => {
 
-  const {error}=await supabase.auth.signInWithPassword({
-    email:loginEmail.value,
-    password:loginPass.value
+  const btn = loginBtn;
+
+  // 🔥 Step 1: disable button + text change (clean UX)
+  btn.disabled = true;
+  btn.textContent = "Signing in...";
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: loginEmail.value,
+    password: loginPass.value
   });
 
   if(error){
-    btn.classList.remove("loading");
-    errorMessage.textContent="Invalid email or password";
+    btn.disabled = false;
+    btn.textContent = "LOGIN";
+
+    errorMessage.textContent = "Invalid email or password";
     errorModal.classList.add("show");
     return;
   }
 
+  // 🔥 Check status
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("status")
+    .eq("id", data.user.id)
+    .single();
+
+  if(profile?.status === "Disabled"){
+    await supabase.auth.signOut();
+
+    btn.disabled = false;
+    btn.textContent = "LOGIN";
+
+    errorMessage.textContent = "Account is disabled. Contact Admin.";
+    errorModal.classList.add("show");
+    return;
+  }
+
+  // 🔥 Step 2: show FULL loader (like real apps)
   pageLoader.classList.add("active");
-  setTimeout(()=>location.href="index.html",800);
+
+  setTimeout(() => {
+    location.href = "index.html";
+  }, 800);
 };
 
+document.getElementById("closeError").onclick = () => {
+  errorModal.classList.remove("show");
+};
 </script>
 
 </body>

@@ -16,7 +16,7 @@
 <!-- SIDEBAR -->
 <aside class="sidebar">
 
-<div class="logo">⚡ NoiseSense</div>
+<div class="logo" onclick="location.href='index.html'">🔊 Tahimik Hero</div>
 
 <nav class="menu">
 <a href="index.html">Dashboard</a>
@@ -25,6 +25,7 @@
 <a href="map.html">Noise Map</a>
 <a href="reports.html">Reports</a>
 <a href="register_device.html">Register Device</a>
+<a href="users.html">User Management</a>
 </nav>
 
 <div class="logout">
@@ -48,12 +49,12 @@
 </div>
 
 <div class="card">
-<h3>Latest Device</h3>
+<h3>Latest Alert Device</h3>
 <p id="latestDevice">-</p>
 </div>
 
 <div class="card">
-<h3>Highest dB</h3>
+<h3>Peak Noise Level</h3>
 <p id="highestDb">0</p>
 </div>
 
@@ -86,7 +87,11 @@ class="alert-date"
 
 <!-- ALERT LIST -->
 <div id="alertsContainer" class="alerts-list"></div>
-
+<div class="pagination">
+  <button id="prevPage">Prev</button>
+  <span id="pageInfo">Page 1</span>
+  <button id="nextPage">Next</button>
+</div>
 </div>
 
 </div>

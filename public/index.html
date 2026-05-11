@@ -14,7 +14,8 @@
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-<div class="logo">⚡ NoiseSense</div>
+<div class="logo" id="homeLogo">🔊 Tahimik Hero</div>
+
 
 <nav class="menu">
 <a href="index.html" class="active">Dashboard</a>
@@ -23,6 +24,7 @@
 <a href="map.html">Noise Map</a>
 <a href="reports.html">Reports</a>
 <a href="register_device.html">Register Device</a>
+<a href="users.html">User Management</a>
 </nav>
 
 <div class="logout">
@@ -115,6 +117,19 @@
 
 <!-- DASHBOARD -->
 <script type="module" src="js/dashboard.js"></script>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const logo = document.getElementById("homeLogo");
+
+  logo.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  });
+});
+</script>
 
 </body>
 </html>

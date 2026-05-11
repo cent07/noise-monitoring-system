@@ -265,7 +265,7 @@ cursor:pointer;
 
 /* CANCEL */
 .btn-cancel{
-background:#ef4444;
+background:#0F172A;
 color:white;
 }
 
@@ -292,3 +292,35 @@ margin-right:10px;
 .btn-play:hover{
 background:#1d4ed8;
 }
+
+.pagination{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+  margin-top:20px;
+}
+
+.pagination button{
+  padding:8px 14px;
+  border:none;
+  border-radius:8px;
+  background:#0f172a;
+  color:white;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.pagination button:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+
+#pageInfo{
+  font-size:14px;
+  color:#475569;
+}.node.offline{
+  background:#94a3b8; /* gray */
+  box-shadow:none;
+}
+

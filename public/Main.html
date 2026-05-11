@@ -10,9 +10,24 @@
 
 <body>
 
+  <!-- SIDEBAR -->
+<div class="sidebar">
+
+  <a href="#realtime">📊 Realtime</a>
+  <a href="#devices">📡 Devices</a>
+  <a href="#overview">📘 Overview</a>
+  <a href="#features">⚡ Features</a>
+  <a href="#device-info">🔧 Device</a>
+  <a href="#how-it-works">⚙️ Process</a>
+  <a href="#threshold">📏 Threshold</a>
+  <a href="#faq">❓ FAQ</a>
+  <a href="#contact">📞 Contact</a>
+
+</div>
+
 <!-- HEADER -->
 <div class="topbar">
-  <div class="brand">⚡ NoiseSense</div>
+  <div class="brand">🔊 Tahimik Hero</div>
   <div class="actions">
   <a href="auth.html" class="login-btn">Login</a>
 </div>
@@ -20,7 +35,7 @@
 <!-- REALTIME -->
 <div class="container">
 
-<h2 class="section-title">Realtime Analytics</h2>
+<h2 id="realtime" class="section-title">Realtime Analytics</h2>
 
 <div class="analytics">
 
@@ -49,7 +64,7 @@
 </div>
 
 <!-- DEVICES -->
-<div class="devices-panel">
+<div id="devices" class="devices-panel">
   <h3>Select Device</h3>
 
   <table class="devices-table">
@@ -63,6 +78,428 @@
   </table>
 </div>
 
+<!-- SYSTEM OVERVIEW -->
+<div id="overview" class="info-section">
+
+  <h2 class="section-title">System Overview</h2>
+
+  <div class="info-card">
+    <p>
+      The NoiseSense System is an Internet of Things (IoT)-based application developed to monitor and manage environmental noise levels in real time. It is designed for indoor environments such as classrooms and offices where maintaining proper noise levels is important.
+    </p>
+
+    <p>
+      The system uses ESP32 devices with sound sensors to capture noise and convert it into decibel (dB) values. These readings are transmitted through WiFi using WebSocket communication for fast and continuous data updates.
+    </p>
+
+    <p>
+      A web-based dashboard displays live noise data, graphs, and device information, allowing users to monitor conditions in real time. It also includes alert notifications when noise exceeds set thresholds, as well as reporting features for analyzing noise trends.
+    </p>
+
+    <p>
+      Overall, the system provides a simple and efficient way to monitor and control noise using modern IoT technology.
+    </p>
+  </div>
+
+</div>
+
+<!-- KEY FEATURES -->
+<div id="features" class="info-section">
+
+  <h2 class="section-title">Key Features</h2>
+
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <h4>📡 Real-time Monitoring</h4>
+      <p>Displays live noise levels from ESP32 devices with continuous updates on the dashboard.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>⚠️ Noise Alerts</h4>
+      <p>Automatically detects when noise exceeds the set threshold and notifies users instantly.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>📊 Data Visualization</h4>
+      <p>Shows noise trends through interactive graphs for easier analysis and monitoring.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>🗺️ Noise Mapping</h4>
+      <p>Provides an overview of noise levels across different locations and devices.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>🕒 Reports</h4>
+      <p>Generates daily, weekly, and monthly reports to track noise patterns over time.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>⚙️ Threshold Control</h4>
+      <p>Allows users to configure acceptable noise levels based on environment needs.</p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DEVICE INFORMATION -->
+<div id="device-info" class="info-section">
+
+  <h2 class="section-title">Device Information</h2>
+
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <h4>📟 ESP32 Microcontroller</h4>
+      <p>The system uses ESP32 as the main microcontroller for processing and transmitting noise data.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>🎤 Sound Sensor</h4>
+      <p>Captures environmental sound and converts it into measurable signals for noise level analysis.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>📶 WiFi Connectivity</h4>
+      <p>Enables wireless communication between the device and the server for real-time data transfer.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>🔄 WebSocket Communication</h4>
+      <p>Provides fast and continuous data transmission from the device to the dashboard.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>🔋 Power Supply</h4>
+      <p>The device is powered through USB type C or external power source for continuous operation.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>📍 Device Deployment</h4>
+      <p>Devices are installed in selected locations such as classrooms to monitor noise levels effectively.</p>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- HOW IT WORKS -->
+<div id="how-it-works" class="info-section">
+
+  <h2 class="section-title">How It Works</h2>
+
+  <div class="dual-steps">
+
+    <!-- HARDWARE -->
+    <div class="steps-container">
+      <h3 class="steps-title">⚙️ Device Usage (Hardware)</h3>
+
+      <div class="steps">
+
+        <div class="step-divider">Power On Process</div>
+
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>🔌 Power On</h4>
+            <p>Switch on the device using the main power switch.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>📶 Connect to WiFi</h4>
+            <p>Wait for the device to initialize and connect to the configured WiFi network.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>📡 Register Device</h4>
+            <p>Press and hold the button for 2–3 seconds to display connection status and register the device in the system.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>✅ Confirm Connection</h4>
+            <p>Press and hold the button again for 2–3 seconds to finalize the connection.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h4>🎤 Start Monitoring</h4>
+            <p>The device will automatically begin detecting and transmitting noise data.</p>
+          </div>
+        </div>
+
+        <div class="step-divider">Power Off Process</div>
+
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>🔴 Power Off</h4>
+            <p>Simply switch off the power button to stop the device.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SOFTWARE -->
+    <div class="steps-container">
+      <h3 class="steps-title">💻 Dashboard Usage (Software)</h3>
+
+      <div class="steps">
+
+        <div class="step-divider">Dashboard Monitoring</div>
+
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>🔐 Login Access</h4>
+            <p>Users log in to access the NoiseSense dashboard.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>📊 View Realtime Data</h4>
+            <p>Monitor live noise levels, graphs, and device status.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>📍 Select Device</h4>
+            <p>Choose a device to view data from a specific location.</p>
+          </div>
+        </div>
+
+        <div class="step-divider">System Controls</div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>⚙️ Adjust Threshold</h4>
+            <p>Set acceptable noise levels depending on the environment.</p>
+          </div>
+        </div>
+
+        <div class="step">
+
+          <div class="step-number">5</div>
+          <div class="step-content">
+            <h4>⚠️ Monitor Alerts</h4>
+            <p>View notifications when noise exceeds the configured threshold.</p>
+          </div>
+        </div>
+
+        <div class="step-divider">Reports & Analysis</div>
+
+        <div class="step">
+          <div class="step-number">6</div>
+          <div class="step-content">
+            <h4>📁 View Reports</h4>
+            <p>Access daily, weekly, and monthly reports for noise analysis.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- THRESHOLD GUIDE -->
+<div id="threshold" class="info-section">
+
+  <h2 class="section-title">Threshold Guide</h2>
+
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <h4>🟢 Normal (0–50 dB)</h4>
+      <p>This range represents a quiet and conducive learning environment. Students can focus and understand lessons clearly.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>🟡 Moderate (51–70 dB)</h4>
+      <p>Noise is noticeable but still manageable. Prolonged exposure may begin to affect concentration and communication.</p>
+    </div>
+
+    <div class="feature-card">
+      <h4>🔴 Critical (71 dB and above)</h4>
+      <p>This level may disrupt learning and communication. Immediate attention is recommended to reduce noise.</p>
+    </div>
+
+  </div>
+
+  <!-- GUIDE EXPLANATION -->
+  <div class="info-card" style="margin-top:15px;">
+    <p>
+      The threshold levels are based on studies indicating that excessive classroom noise negatively affects students’ concentration, understanding, and overall learning performance. Maintaining noise within acceptable limits helps create a more effective and conducive learning environment.
+    </p>
+
+    <p>
+      Administrators may adjust the threshold values depending on room conditions, number of students, and classroom activities. Proper calibration and observation are recommended to ensure accurate and reliable monitoring.
+    </p>
+  </div>
+
+</div>
+
+<!-- FAQ -->
+<div id="faq" class="info-section">
+
+  <h2 class="section-title">Frequently Asked Questions</h2>
+
+  <div class="faq-container">
+
+    <div class="faq-item">
+      <h4>❓ What is NoiseSense?</h4>
+      <p>NoiseSense is an IoT-based system that monitors classroom noise levels in real time using ESP32 devices and a web dashboard.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ How does the system measure noise?</h4>
+      <p>The system uses a sound sensor connected to an ESP32 device to capture sound and convert it into decibel (dB) values.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ What happens when noise exceeds the threshold?</h4>
+      <p>The system triggers alerts and may record audio for verification depending on the configuration.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Why is noise monitoring important in classrooms?</h4>
+      <p>Excessive noise can affect students’ concentration, understanding, and overall learning performance.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Can the system work without internet?</h4>
+      <p>No, the system requires an internet connection to transmit data and display real-time updates on the dashboard.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ What does “device offline” mean?</h4>
+      <p>This means the device is not connected to the internet or is powered off.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ How can I reconnect a device?</h4>
+      <p>Restart the device and ensure it is connected to the correct WiFi network.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Can I monitor multiple devices?</h4>
+      <p>Yes, the system supports multiple devices and allows users to select specific locations.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ What is noise mapping?</h4>
+      <p>Noise mapping shows the noise levels in different locations based on device placement.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Is the audio always recorded?</h4>
+      <p>No, audio is only recorded during critical noise conditions for verification purposes.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Who can access the system?</h4>
+      <p>Only authorized users such as administrators can access the dashboard and features.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Can I adjust the noise threshold?</h4>
+      <p>Yes, administrators can configure the threshold depending on the environment.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ What are the reports used for?</h4>
+      <p>Reports help analyze noise patterns over time through daily, weekly, and monthly data.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Is the system accurate?</h4>
+      <p>The system provides reliable estimates, but accuracy depends on proper sensor calibration and placement.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Where should the device be placed?</h4>
+      <p>Devices should be placed in areas where noise monitoring is needed, such as classrooms or study areas.</p>
+    </div>
+
+    <div class="faq-item">
+      <h4>❓ Can the system be used outside classrooms?</h4>
+      <p>The system is designed for indoor environments, but it can be adapted for other use cases.</p>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="contact" class="info-section contact-mini">
+
+  <h2 class="section-title center-text">Contact Us</h2>
+
+  <div class="contact-inline">
+
+    <div class="contact-group">
+      <span class="label">📞</span>
+      <a href="tel:+639511695865">+63 951 169 5865</a>
+      <a href="tel:+639455397796">+63 945 539 7796</a>
+    </div>
+
+    <div class="contact-group">
+      <span class="label">📧</span>
+      <a href="mailto:johnraymartreyes1@gmail.com">johnraymartreyes1@gmail.com</a>
+      <a href="mailto:vincentorres0711@gmail.com">vincentorres0711@gmail.com</a>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+
+  <div class="footer-content">
+
+    <p class="footer-title">Tahimik Hero</p>
+
+    <p class="footer-desc">
+      An IoT-based noise monitoring system designed to promote a conducive learning environment.
+    </p>
+
+    <p class="footer-warning">
+      The contact information provided on this system is intended for academic and system-related purposes only. 
+      Any misuse, unauthorized use, or use of this information for malicious, fraudulent, or inappropriate activities 
+      may result in legal consequences in accordance with applicable laws and regulations.
+    </p>
+
+    <p class="footer-copy">
+      © 2026 Tahimik Hero | Developed by BSIT Students
+    </p>
+
+  </div>
+
+</footer>
+
 </div>
 
 <!-- REACT GRAPH -->
@@ -70,6 +507,43 @@
 
 <!-- MAIN JS -->
 <script type="module" src="js/main.js"></script>
+
+<script>
+// smooth scroll
+document.querySelectorAll('.sidebar a').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const target = document.querySelector(this.getAttribute('href'));
+    target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  });
+});
+
+// active highlight habang scroll
+const sections = document.querySelectorAll("h2[id], div[id]");
+const navLinks = document.querySelectorAll(".sidebar a");
+
+window.addEventListener("scroll", () => {
+  let current = "";
+
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 120;
+    if (pageYOffset >= sectionTop) {
+      current = section.getAttribute("id");
+    }
+  });
+
+  navLinks.forEach(link => {
+    link.classList.remove("active");
+    if (link.getAttribute("href") === "#" + current) {
+      link.classList.add("active");
+    }
+  });
+});
+</script>
 
 </body>
 </html>

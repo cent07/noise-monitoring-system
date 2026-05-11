@@ -56,15 +56,18 @@ ws.on("message", (data) => {
 
 });
 
-  ws.on("close", () => {
+ws.on("close", () => {
+  if (devices[device]) {
     devices[device].delete(ws);
 
     if (devices[device].size === 0) {
       delete devices[device];
+      delete audioBuffers[device];
     }
+  }
 
-    console.log("Disconnected:", device);
-  });
+  console.log("Disconnected:", device);
+});
 });
 
 const { createClient } = require("@supabase/supabase-js");
@@ -163,8 +166,18 @@ setInterval(async () => {
 }, 2000);
 setInterval(() => {
   wss.clients.forEach(ws => {
+
+    if (ws.isAlive === false) {
+      console.log("Terminating dead socket");
+      ws.terminate();
+      return;
+    }
+
+    ws.isAlive = false;
+
     if (ws.readyState === WebSocket.OPEN) {
       ws.ping();
     }
+
   });
 }, 30000);

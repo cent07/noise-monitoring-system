@@ -1,72 +1,109 @@
-return (
-  <div style={{ padding: 30 }}>
+import { useEffect, useState } from "react";
+import {
+  ComposedChart,
+  Line,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
-    <h2 style={{ marginBottom: 20 }}>Noise Analytics</h2>
+export default function ReportsGraph() {
+  const [data, setData] = useState([]);
 
-    {/* FILTER */}
-    <select
-      value={range}
-      onChange={(e) => setRange(e.target.value)}
-      style={{
-        marginBottom: 20,
-        padding: 10,
-        borderRadius: 8,
-        border: "1px solid #e2e8f0"
-      }}
-    >
-      <option value="daily">Daily</option>
-      <option value="weekly">Weekly</option>
-      <option value="monthly">Monthly</option>
-    </select>
+  useEffect(() => {
+    window.renderReportsGraph = (incomingData) => {
+      setData(incomingData);
+    };
+  }, []);
 
-    {/* SUMMARY */}
-    <div style={{
-      display: "flex",
-      gap: 20,
-      marginBottom: 25
-    }}>
-      <div style={cardStyle}>
-        <p style={labelStyle}>Average Noise</p>
-        <h2>{avg} dB</h2>
+  if (data.length === 0) {
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "#94a3b8" }}>
+        No data available
       </div>
+    );
+  }
 
-      <div style={cardStyle}>
-        <p style={labelStyle}>Peak Noise</p>
-        <h2>{peak} dB</h2>
-      </div>
-    </div>
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <ComposedChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
+        <defs>
+          <linearGradient id="colorAvg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+          </linearGradient>
+        </defs>
 
-    {/* GRAPH */}
-    <div style={{
-      background: "#fff",
-      padding: 20,
-      borderRadius: 12,
-      boxShadow: "0 2px 12px rgba(0,0,0,0.05)"
-    }}>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
 
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={data}>
+        <XAxis 
+          dataKey="label" 
+          axisLine={false} 
+          tickLine={false} 
+          tick={{ fontSize: 11, fill: "#94a3b8" }} 
+          dy={10} 
+        />
 
-          <CartesianGrid strokeDasharray="3 3" />
+        <YAxis 
+          axisLine={false} 
+          tickLine={false} 
+          tick={{ fontSize: 11, fill: "#94a3b8" }} 
+          tickFormatter={(v) => `${v}dB`} 
+        />
 
-          {/* ✅ FIXED KEY */}
-          <XAxis dataKey="label" />
+        {/* FIX: Filtered Tooltip para hindi madoble yung labels */}
+        <Tooltip
+          cursor={{ stroke: '#e2e8f0', strokeWidth: 2 }}
+          contentStyle={{ borderRadius: "10px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.1)", fontSize: "12px" }}
+          // Dito natin aalisin yung extra 'avg' entry
+          itemSorter={(item) => (item.dataKey === 'avg' ? -1 : 1)}
+        />
 
-          <YAxis />
+        <Legend
+          verticalAlign="top"
+          align="right"
+          iconType="circle"
+          wrapperStyle={{ paddingBottom: "20px", fontSize: "12px", fontWeight: 600 }}
+        />
 
-          <Tooltip />
+        {/* BACKGROUND AREA (Naka-hide sa Legend para hindi mag-duplicate) */}
+        <Area
+          type="monotone"
+          dataKey="avg"
+          stroke="none"
+          fillOpacity={1}
+          fill="url(#colorAvg)"
+          legendType="none" // ITO ANG NAG-AALIS SA LEGEND
+          tooltipType="none" // ITO ANG NAG-AALIS SA TOOLTIP
+        />
 
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke="#3b82f6"
-            strokeWidth={3}
-            dot={false}
-          />
+        {/* MAIN AVERAGE LINE */}
+        <Line
+          type="monotone"
+          dataKey="avg"
+          name="Average Noise"
+          stroke="#10b981"
+          strokeWidth={3}
+          dot={false}
+          activeDot={{ r: 6, strokeWidth: 0 }}
+        />
 
-        </LineChart>
-      </ResponsiveContainer>
-
-    </div>
-  </div>
-);
+        {/* PEAK NOISE LINE */}
+        <Line
+          type="monotone"
+          dataKey="peak"
+          name="Peak Noise"
+          stroke="#ef4444"
+          strokeWidth={2}
+          strokeDasharray="5 5"
+          dot={false}
+          activeDot={{ r: 6, strokeWidth: 0 }}
+        />
+      </ComposedChart>
+    </ResponsiveContainer>
+  );
+}

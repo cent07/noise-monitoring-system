@@ -21,7 +21,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <aside class="sidebar">
 
-<div class="logo">⚡ NoiseSense</div>
+<div class="logo" onclick="goHome()">🔊 Tahimik Hero</div>
 
 <nav class="menu">
 <a href="index.html">Dashboard</a>
@@ -30,6 +30,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <a href="map.html">Noise Map</a>
 <a href="reports.html">Reports</a>
 <a href="register_device.html">Register Device</a>
+<a href="users.html">User Management</a>
 </nav>
 
 <div class="logout">
@@ -155,6 +156,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 
 <script type="module" src="js/threshold.js"></script>
+
+<script>
+function goHome(){
+  window.location.href = "index.html";
+}
+</script>
 
 </body>
 </html>

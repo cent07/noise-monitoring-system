@@ -131,7 +131,7 @@ width:100%;
 }
 
 .btn-cancel{
-background:#ef4444;
+background:#0F172A;
 color:white;
 border:none;
 padding:10px 16px;
@@ -211,4 +211,14 @@ caret-color: transparent;
 
 input{
 caret-color: black;
+}
+
+.logo{
+  user-select: none;
+  cursor: default;
+}
+
+.logo:focus,
+.logo:active{
+  outline: none;
 }

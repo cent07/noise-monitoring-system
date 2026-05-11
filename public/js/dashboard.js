@@ -29,6 +29,8 @@ let thresholds = {
   moderate: 70,
   critical: 90
 };
+let deviceStates = {};
+let deviceThresholdMap = {};
 
 const deleteModal = document.getElementById("deleteModal");
 const editModal = document.getElementById("editModal");
@@ -118,6 +120,10 @@ async function selectDevice(device, location, row) {
   currentDevice = device;
   currentLocation = location || "-";
 
+  // 🔥 RESET VALUES
+  noiseBuffer = [];
+  avgNoise.innerText = "0 dB";
+
   await loadThresholds();
 
   if (window.setThresholds) {
@@ -126,10 +132,25 @@ async function selectDevice(device, location, row) {
 
   checkDeviceOnline();
 
-  // 🔥 WAIT FOR GRAPH AGAIN
   await waitForGraph();
 
   loadLatest();
+}
+
+async function loadAllThresholds(){
+
+  const { data } = await supabase
+  .from("device_thresholds")
+  .select("*");
+
+  data.forEach(d => {
+    deviceThresholdMap[d.device_name.trim().toUpperCase()] = {
+      normal: d.normal,
+      moderate: d.moderate,
+      critical: d.critical
+    };
+  });
+
 }
 
 
@@ -185,20 +206,72 @@ data.reverse().forEach((row,i)=>{
 });
 
 }
+let noiseBuffer = [];
+
 function applyRow(row, isHistory = false) {
 
   if (!window.updateNoiseGraph) return;
-  if (row.device_name !== currentDevice) return;
 
   const noise = Number(row.db || 0);
+  const device = row.device_name.trim().toUpperCase();
 
-  avgNoise.innerText = noise.toFixed(1) + " dB";
+  console.log("Incoming:", device, noise);
 
-  window.updateNoiseGraph(
-    noise,
-    isHistory ? "history" : "live"
-  );
+  const t = deviceThresholdMap[device] || thresholds;
+
+deviceStates[device] = {
+  noise: noise,
+  isCritical: row.status === "Critical",
+  lastSeen: Date.now()
+};
+
+  if (device === currentDevice) {
+
+    noiseBuffer.push(noise);
+
+    if (noiseBuffer.length > 20) {
+      noiseBuffer.shift();
+    }
+
+    const avg = noiseBuffer.reduce((a, b) => a + b, 0) / noiseBuffer.length;
+
+    avgNoise.innerText = avg.toFixed(1) + " dB";
+
+    window.updateNoiseGraph(
+      noise,
+      isHistory ? "history" : "live"
+    );
+  }
+
+  updateAlerts();
 }
+function updateAlerts(){
+
+  let count = 0;
+
+  Object.values(deviceStates).forEach(d => {
+    if(d.isCritical){
+      count++;
+    }
+  });
+
+  activeAlerts.innerText = count;
+}
+setInterval(() => {
+
+  const now = Date.now();
+
+  Object.keys(deviceStates).forEach(device => {
+    const last = deviceStates[device].lastSeen || now;
+
+    if((now - last) > 5000){ // 5 sec timeout
+      delete deviceStates[device];
+    }
+  });
+
+  updateAlerts();
+
+}, 2000);
 
 /* REALTIME */
 
@@ -210,7 +283,6 @@ payload => {
   applyRow(payload.new, false);
 })
 .subscribe();
-
 
 /* ONLINE OFFLINE UI */
 
@@ -333,9 +405,11 @@ window.onclick = (e) => {
 };
 
 
-waitForGraph().then(() => {
+(async () => {
+  await loadAllThresholds();
+  await waitForGraph();
   loadDevices();
-});
+})();
 
 setInterval(()=>{
 if(currentDevice){
